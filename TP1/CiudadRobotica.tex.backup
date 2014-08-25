@@ -19,25 +19,34 @@ hola
 \end{tad}
 \newpage
 
+
+% No veo como contar las infracciones si el robot guarda la estacion donde se encuentra
+%opcion 1: Generador Mover en CiudadRobotica y una funcion que cuente recursivamente los movimientos ilegales
+%opcion 2: En el generador NuevoRobot un parametro nat que contenga las infracciones y una funcion que la modifique
+%La opcion 2 no me gusta, parece como modificar una variable en memoria, demasiado implementativo.
+
 \begin{tad}{\tadNombre{Robot}}
 \tadGeneros{Robot}
 \tadExporta{Generadores, Observadores, Otras Operaciones}
-\tadUsa{Nat, Bool, Caracteristica}
+\tadUsa{Nat, Bool, Caracteristica, Conj($\alpha$)}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
 \tadOperacion{RUR}{Robot}{Nat}{}
-\tadOperacion{ConjdeCar}{Robot}{Conj(Caracteristica)}{}
+\tadOperacion{CaracteristicasR}{Robot}{Conj(Caracteristica)}{}
+\tadOperacion{estacion}{Robot}{Estacion}{}
 \tadGeneradores
-\tadOperacion{NuevoRobot}{Nat}{Robot}{}
+\tadOperacion{NuevoRobot}{Nat, Estacion}{Robot}{}
 \tadOperacion{AgCaracteristica}{Robot, Caracteristica}{Robot}{}
 \tadOtrasOperaciones
-\tadOperacion{TieneCaracteristica?}{Robot}{Bool}{}
+\tadOperacion{TieneCaracteristica?}{Robot, Caracteristica}{Bool}{}
 \tadAxiomas[\paratodo{Robot}{r}]
-\tadAxioma{RUR(NuevoRobot(n))}{n}
+\tadAxioma{RUR(NuevoRobot(n, e))}{n}
 \tadAxioma{RUR(AgCaracteristica(r, c))}{RUR(r)}
-\tadAxioma{ConjdeCar(NuevoRobot(n))}{$\emptyset$}
-\tadAxioma{ConjdeCar()}{}
-\tadAxioma{}{}
+\tadAxioma{CaracteristicasR(NuevoRobot(n, e))}{$\emptyset$}
+\tadAxioma{CaracteristicasR(AgCaracteristica(r, c))}{Ag(c, CaracteristicasR(r))}
+\tadAxioma{estacion(NuevoRobot(n, e))}{e}
+\tadAxioma{estacion(AgCaracteristica(r, c))}{estacion(r)}
+\tadAxioma{TieneCaracteristica?(r, c)}{c $\in$ CaracteristicasR(r)}
 \end{tad}
 
 \begin{tad}{\tadNombre{Senda}}
@@ -46,7 +55,13 @@ hola
 \tadUsa{}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
-
+\tadOperacion{estacion1}{Senda}{Estacion}{}
+\tadOperacion{estacion2}{Senda}{Estacion}{}
+\tadOperacion{RestriccionS}{Senda}{Restriccion}{}
+\tadOperacion{}{}{}{}
+\tadGeneradores
+\tadOperacion{SendaNueva}{}{}{}
+\tadOperacion{}{}{}{}
 \tadAxioma{}{}
 \tadAxioma{}{}
 \end{tad}

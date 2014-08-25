@@ -19,6 +19,13 @@ hola
 \end{tad}
 \newpage
 
+%TODO: alinear, y los TAD renombre: estacion, caracteristica. TADs CiudadRobotica, Senda. Igualdad Observacional de todos 
+% No veo como contar las infracciones si el robot guarda la estacion donde se encuentra
+%opcion 1: Generador Mover(robot, estacion, CR) en CiudadRobotica y una funcion que cuente recursivamente los movimientos ilegales
+%opcion 2: En el generador NuevoRobot un parametro nat que contenga las infracciones y 
+%		una funcion que la modifique. En CR una otra operacion Mover.
+%La opcion 2 no me gusta, parece como modificar una variable en memoria, demasiado implementativo.
+
 \begin{tad}{\tadNombre{Robot}}
 \tadGeneros{Robot}
 \tadExporta{Generadores, Observadores, Otras Operaciones}
@@ -26,27 +33,42 @@ hola
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
 \tadOperacion{RUR}{Robot}{Nat}{}
-\tadOperacion{ConjdeCar}{Robot}{Conj(Caracteristica)}{}
+\tadOperacion{CaracteristicasR}{Robot}{Conj(Caracteristica)}{}
+\tadOperacion{estacion}{Robot}{Estacion}{}
 \tadGeneradores
-\tadOperacion{NuevoRobot}{Nat}{Robot}{}
+\tadOperacion{NuevoRobot}{Nat, Estacion}{Robot}{}
 \tadOperacion{AgCaracteristica}{Robot, Caracteristica}{Robot}{}
 \tadOtrasOperaciones
 \tadOperacion{TieneCaracteristica?}{Robot, Caracteristica}{Bool}{}
 \tadAxiomas[\paratodo{Robot}{r}]
-\tadAxioma{RUR(NuevoRobot(n))}{n}
+\tadAxioma{RUR(NuevoRobot(n, e))}{n}
 \tadAxioma{RUR(AgCaracteristica(r, c))}{RUR(r)}
-\tadAxioma{ConjdeCar(NuevoRobot(n))}{$\emptyset$}
-\tadAxioma{ConjdeCar(AgCaracteristica(r, c))}{Ag(c, ConjdeCar(r))}
-\tadAxioma{TieneCaracteristica?(r, c)}{c $\in$ ConjdeCar(r)}
+\tadAxioma{CaracteristicasR(NuevoRobot(n, e))}{$\emptyset$}
+\tadAxioma{CaracteristicasR(AgCaracteristica(r, c))}{Ag(c, CaracteristicasR(r))}
+\tadAxioma{estacion(NuevoRobot(n, e))}{e}
+\tadAxioma{estacion(AgCaracteristica(r, c))}{estacion(r)}
+\tadAxioma{TieneCaracteristica?(r, c)}{c $\in$ CaracteristicasR(r)}
 \end{tad}
 
 \begin{tad}{\tadNombre{Senda}}
 \tadGeneros{Senda}
 \tadExporta{Generadores, Observadores}
-\tadUsa{}
+\tadUsa{Bool, Robot, Restriccion, Estacion}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
-
+\tadOperacion{estacion1}{Senda}{Estacion}{}
+\tadOperacion{estacion2}{Senda}{Estacion}{}
+\tadOperacion{RestriccionS}{Senda}{Restriccion}{}
+\tadOperacion{}{}{}{}
+\tadGeneradores
+\tadOperacion{SendaNueva}{Estacion/e1, Estacion/e2, Restriccion}{Senda}{$\neg$(e1 \igobs e2)}
+\tadOtrasOperaciones
+\tadOperacion{Permitido?}{Senda, Robot}{Bool}{}
+\tadAxiomas
+\tadAxioma{estacion1(SendaNueva(e1, e2, r))}{e1}
+\tadAxioma{estacion2(SendaNueva(e1, e2, r))}{e2}
+\tadAxioma{RestriccionS(SendaNueva(e1, e2, r))}{r}
+\tadAxioma{Permitido?(s, r)}{CumpleCondicion?(RestriccionS(s), r)}
 \tadAxioma{}{}
 \tadAxioma{}{}
 \end{tad}
