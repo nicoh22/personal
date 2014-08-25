@@ -22,7 +22,7 @@ hola
 \begin{tad}{\tadNombre{Robot}}
 \tadGeneros{Robot}
 \tadExporta{Generadores, Observadores, Otras Operaciones}
-\tadUsa{Nat, Bool, Caracteristica, Conj($\alpha$)}
+\tadUsa{Nat, Bool, Caracteristica}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
 \tadOperacion{RUR}{Robot}{Nat}{}
@@ -31,13 +31,13 @@ hola
 \tadOperacion{NuevoRobot}{Nat}{Robot}{}
 \tadOperacion{AgCaracteristica}{Robot, Caracteristica}{Robot}{}
 \tadOtrasOperaciones
-\tadOperacion{TieneCaracteristica?}{Robot, Caracteristica}{Bool}{}
+\tadOperacion{TieneCaracteristica?}{Robot}{Bool}{}
 \tadAxiomas[\paratodo{Robot}{r}]
 \tadAxioma{RUR(NuevoRobot(n))}{n}
 \tadAxioma{RUR(AgCaracteristica(r, c))}{RUR(r)}
 \tadAxioma{ConjdeCar(NuevoRobot(n))}{$\emptyset$}
-\tadAxioma{ConjdeCar(AgCaracteristica(r, c))}{Ag(c, ConjdeCar(r))}
-\tadAxioma{TieneCaracteristica?(r, c)}{c $\in$ ConjdeCar(r)}
+\tadAxioma{ConjdeCar()}{}
+\tadAxioma{}{}
 \end{tad}
 
 \begin{tad}{\tadNombre{Senda}}
@@ -46,6 +46,7 @@ hola
 \tadUsa{}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
+
 \tadAxioma{}{}
 \tadAxioma{}{}
 \end{tad}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.7.16)  25 AUG 2014 13:45
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.7.16)  25 AUG 2014 14:38
 entering extended mode
  %&-line parsing enabled.
 **CiudadRobotica.tex
@@ -453,38 +453,40 @@ LaTeX Info: Redefining \pageref on input line 14.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for U+lasy on input line 27.
+LaTeX Font Info:    Try loading font information for U+lasy on input line 23.
  (/usr/share/texmf-texlive/tex/latex/base/ulasy.fd
 File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 27.
+LaTeX Font Info:    Try loading font information for U+msa on input line 23.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 27.
+LaTeX Font Info:    Try loading font information for U+msb on input line 23.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-AED: lastpage setting LastPage [2] (./CiudadRobotica.aux) ) 
+AED: lastpage setting LastPage [2] [3] (./CiudadRobotica.aux) ) 
 Here is how much of TeX's memory you used:
- 6747 strings out of 494999
- 92709 string characters out of 1180816
- 175044 words of memory out of 3000000
- 9800 multiletter control sequences out of 15000+50000
- 7869 words of font info for 28 fonts, out of 3000000 for 9000
+ 6752 strings out of 494999
+ 92755 string characters out of 1180816
+ 185044 words of memory out of 3000000
+ 9802 multiletter control sequences out of 15000+50000
+ 9403 words of font info for 30 fonts, out of 3000000 for 9000
  54 hyphenation exceptions out of 8191
- 38i,9n,43p,289b,328s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf/fo
-nts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-texlive/fonts/type1/pu
-blic/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
-ts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></u
-sr/share/texmf/fonts/type1/public/cm-super/sfcc1000.pfb></usr/share/texmf/fonts
-/type1/public/cm-super/sfrm1000.pfb>
-Output written on CiudadRobotica.pdf (2 pages, 63385 bytes).
+ 38i,11n,43p,289b,328s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texm
+f/fonts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-texlive/fonts/type
+1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/am
+sfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cm
+r7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></us
+r/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/
+type1/public/cm-super/sfcc1000.pfb></usr/share/texmf/fonts/type1/public/cm-supe
+r/sfrm1000.pfb>
+Output written on CiudadRobotica.pdf (3 pages, 86037 bytes).
 PDF statistics:
- 36 PDF objects out of 1000 (max. 8388607)
- 3 named destinations out of 1000 (max. 500000)
+ 48 PDF objects out of 1000 (max. 8388607)
+ 4 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
