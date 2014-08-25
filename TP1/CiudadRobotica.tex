@@ -1,0 +1,44 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[paper=a4paper, left=1.5cm, right=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{latexsym}
+\usepackage{lastpage}
+\usepackage{aed2-symb,aed2-itef,aed2-tad}
+\usepackage[colorlinks=true, linkcolor=blue]{hyperref}
+\usepackage{calc}
+
+\begin{document}
+
+
+\begin{tad}{\tadNombre{CiudadRobotica}}
+hola
+\end{tad}
+\newpage
+
+\begin{tad}{\tadNombre{Robot}}
+
+\end{tad}
+
+\begin{tad}{\tadNombre{Restriccion}}
+\tadGeneros{Restriccion}
+\tadExporta{Generadores, Observadores}
+\tadObservadores
+\tadOperacion{CumpleCondicion?}{Restriccion, robot}{bool}{}
+\tadGeneradores
+\tadOperacion{Caract}{Caracteristica}{Restriccion}{}
+\tadOperacion{\argumento OR \argumento}{Restriccion,Restriccion}{Restriccion}{}
+\tadOperacion{\argumento AND \argumento}{Restriccion,Restriccion}{Restriccion}{}
+\tadOperacion{NOT \argumento}{Restriccion}{Restriccion}{}
+\tadAxiomas[\paratodo{Restriccion}{a,b}]
+\tadAxioma{CumpleCondicion?(Caract(s), r)}{esta?(s, caracteristicas(r))}
+\tadAxioma{CumpleCondicion?(a OR b, r)}{CumpleCondicion?(a, r) $\lor$ CumpleCondicion?(b, r)}
+\tadAxioma{CumpleCondicion?(a AND b, r)}{CumpleCondicion?(a, r) $\land$ CumpleCondicion?(b, r)}
+\tadAxioma{CumpleCondicion?(NOT a, r)}{$\neg$ CumpleCondicion?(a, r)}
+\end{tad}
+
+
+\end{document}
