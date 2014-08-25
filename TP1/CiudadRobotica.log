@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.8.24)  24 AUG 2014 20:39
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.7.16)  25 AUG 2014 13:45
 entering extended mode
  %&-line parsing enabled.
 **CiudadRobotica.tex
@@ -46,7 +46,8 @@ Package ifvtex Info: VTeX not detected.
 \Gm@odd@mp=\dimen105
 \Gm@even@mp=\dimen106
 \Gm@dimlist=\toks15
-)
+
+(/usr/share/texmf-texlive/tex/xelatex/xetexconfig/geometry.cfg))
 (/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
 Package: inputenc 2008/03/30 v1.1d Input encoding file
 \inpenc@prehook=\toks16
@@ -104,8 +105,7 @@ LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
 (/usr/share/texmf-texlive/tex/latex/lastpage/lastpage.sty
 Package: lastpage 1994/06/25 v0.1b LaTeX2e package for refs to last page number
  (JPG)
-)
-(/home/bisonterix/texmf/tex/latex/aed2-symb/aed2-symb.sty
+) (./aed2-symb.sty
 Package: aed2-symb 2004/04/17 - Para componer simbolitos frecuentemente usados 
 en AED2
 
@@ -196,8 +196,7 @@ File: xkeyval.tex 2008/08/13 v2.6a key=value parser (HA)
 \xargs@max=\count106
 \xargs@toksa=\toks26
 \xargs@toksb=\toks27
-))
-(/home/bisonterix/texmf/tex/latex/aed2-itef/aed2-itef.sty
+)) (./aed2-itef.sty
 Package: aed2-itef 2010/03/16 - if-then-else-fi en lenguaje de TADs.
 
 (/usr/share/texmf-texlive/tex/latex/base/ifthen.sty
@@ -207,10 +206,9 @@ Cargando package 'itef' (2010/03/16)
 \itefIndentacion=\skip55
 \itef@widthUnaLinea=\skip56
 \itef@linewidth=\skip57
-) (/home/bisonterix/texmf/tex/latex/aed2-tad/aed2-tad.sty
+) (./aed2-tad.sty
 Package: aed2-tad 2011/04/04 - Para especificar TADs en formato AED2
-
-(/usr/share/texmf-texlive/tex/latex/tools/calc.sty
+ (/usr/share/texmf-texlive/tex/latex/tools/calc.sty
 Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
 \calc@Acount=\count107
 \calc@Bcount=\count108
@@ -223,7 +221,7 @@ LaTeX Info: Redefining \addtolength on input line 77.
 \calc@Ccount=\count109
 \calc@Cskip=\skip60
 )
-(/home/bisonterix/texmf/tex/latex/aed2-tokenizer/aed2-tokenizer.sty
+(./aed2-tokenizer.sty
 Package: aed2-tokenizer 2010/03/12
 )
 Package aed2-tad Info: Cargando package 'tad' (04/04/2011) on input line 26.
@@ -471,22 +469,22 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 AED: lastpage setting LastPage [2] (./CiudadRobotica.aux) ) 
 Here is how much of TeX's memory you used:
- 6748 strings out of 494999
- 93058 string characters out of 1180816
- 175018 words of memory out of 3000000
+ 6747 strings out of 494999
+ 92709 string characters out of 1180816
+ 175044 words of memory out of 3000000
  9800 multiletter control sequences out of 15000+50000
  7869 words of font info for 28 fonts, out of 3000000 for 9000
  54 hyphenation exceptions out of 8191
  38i,9n,43p,289b,328s stack positions out of 5000i,500n,10000p,200000b,50000s
- </home/bisonterix/.
-texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </home/bisonterix/.texmf-
-var/fonts/pk/ljfour/jknappen/ec/eccc1000.600pk> </home/bisonterix/.texmf-var/fo
-nts/pk/ljfour/jknappen/ec/ecbx1000.600pk></usr/share/texmf-texlive/fonts/type1/
-public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
-onts/cm/cmsy10.pfb>
-Output written on CiudadRobotica.pdf (2 pages, 43387 bytes).
+{/usr/share/texmf/fo
+nts/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texmf-texlive/fonts/type1/pu
+blic/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfon
+ts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></u
+sr/share/texmf/fonts/type1/public/cm-super/sfcc1000.pfb></usr/share/texmf/fonts
+/type1/public/cm-super/sfrm1000.pfb>
+Output written on CiudadRobotica.pdf (2 pages, 63385 bytes).
 PDF statistics:
- 103 PDF objects out of 1000 (max. 8388607)
+ 36 PDF objects out of 1000 (max. 8388607)
  3 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
