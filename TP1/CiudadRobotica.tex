@@ -10,16 +10,7 @@
 \usepackage{aed2-symb,aed2-itef,aed2-tad}
 \usepackage[colorlinks=true, linkcolor=blue]{hyperref}
 \usepackage{calc}
-
-\begin{document}
-
-
-\begin{tad}{\tadNombre{CiudadRobotica}}
-hola
-\end{tad}
-\newpage
-
-%TODO: alinear, y los TAD renombre: estacion, caracteristica. TADs CiudadRobotica, Senda. Igualdad Observacional de todos 
+%TODO: alinear, y los TAD renombre: estacion, caracteristica. TADs CiudadRobotica, Senda. Igualdad Observacional de todos los tads
 % No veo como contar las infracciones si el robot guarda la estacion donde se encuentra
 %opcion 1: Generador Mover(robot, estacion, CR) en CiudadRobotica y una funcion que cuente recursivamente 
 %	los movimientos ilegales. AgregarRobot toma la estacion como parametro
@@ -27,51 +18,83 @@ hola
 %	que la modifique. En CR una Otra Operacion Mover.
 %La opcion 2 no me gusta, parece como modificar una variable en memoria, demasiado implementativo.
 
+\begin{document}
+
+\begin{tad}{\tadNombre{CiudadRobotica}}
+\tadGeneros{CiudadRobotica}
+\tadExporta{CiudadRobotica, Generadores, Observadores, Otras Operaciones}
+\tadUsa{Nat, Bool, ...}
+\tadIgualdadObservacional{}{}{}{}
+\tadObservadores
+\tadOperacion{robotsC}{CiudadRobotica}{conj(Robot)}{}
+\tadOperacion{sendasC}{CiudadRobotica}{conj(Sendas)}{}
+\tadOperacion{ubicacionR}{Robot/r, CiudadRobotica/cr}{estacion}{r $\in$ robotsC(cr)}
+\tadOperacion{infraccionesR}{CiudadRobotica, Robot}{Nat}{}
+\tadGeneradores
+\tadOperacion{NuevaCiudad}{conj(Sendas)/cs}{CiudadRobotica}{$\neg$ (cs \igobs $\emptyset$)}
+\tadOperacion{AgRobot}{Robot/r1, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\not\exists$ r2: Robot) (r2 $\in$ robotsC(cr)) $\implies$ RUR(r1)\igobs RUR(r2)}
+\tadOperacion{MoverRobot}{Robot/r, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\exists$ s: Senda) s $\in$ sendasC(cr) $\implies$ s \igobs conectadasPor(e, ubicacionR(r,cr), cr)}
+\tadOperacion{}{}{}{}
+\tadOtrasOperaciones
+\tadOperacion{estacionesC}{conj(Sendas)}{conj(estacion)}{}
+\tadOperacion{conectadasPor}{Estacion/e1, Estacion/e2, CiudadRobotica/cr}{Senda}{e1 $\in$ estacionesC(sendasC(cr)) $\land$ e2 $\in$ estacionesC(sendasC(cr))}
+\tadOperacion{conectadasPorAux}{Estacion e1, Estacion e2, conjSendas(cs)}{Senda}{}
+\tadOperacion{inspeccionLunes}{CiudadRobotica, Estacion}{CiudadRobotica}{}
+\tadAxiomas
+\tadAxioma{robotsC(NuevaCiudad(cs))}{$\emptyset$}
+\tadAxioma{robotsC(AgRobot(r, e, cr))}{Ag(e,robotsC(cr))}
+\tadAxioma{robotsC(MoverRobot(r, e, cr))}{robotsC(cr)}
+\tadAxioma{sendasC(NuevaCiudad(cs))}{cs}
+\tadAxioma{sendasC(AgRobot(r, e, cr)}{sendasC(cr)}
+\tadAxioma{sendasC(MoverRobot(r, e, cr))}{sendasC(cr)}
+\tadAxioma{ubicacionR(AgRobot(r1, e, cr), r2)}{\LIF r1 \igobs r2}
+\tadAxioma{ubicacionR(MoverRobot(r1, e, cr), r2)}{}
+\tadAxioma{}{}
+\tadAxioma{}{}
+\tadAxioma{}{}
+\end{tad}
+\newpage
+
+
 \begin{tad}{\tadNombre{Robot}}
 \tadGeneros{Robot}
-\tadExporta{Generadores, Observadores, Otras Operaciones}
+\tadExporta{Robot, Generadores, Observadores, Otras Operaciones}
 \tadUsa{Nat, Bool, Caracteristica, Conj($\alpha$)}
-\tadIgualdadObservacional{}{}{}{}
+\tadIgualdadObservacional{r1}{r2}{Robot}{RUR(r1)\igobs RUR(r2) $\land$\\ CaracteristicasR(r1) \igobs CaracteristicasR(r2)}
 \tadObservadores
 \tadOperacion{RUR}{Robot}{Nat}{}
 \tadOperacion{CaracteristicasR}{Robot}{Conj(Caracteristica)}{}
-\tadOperacion{estacion}{Robot}{Estacion}{}
 \tadGeneradores
-\tadOperacion{NuevoRobot}{Nat, Estacion}{Robot}{}
+\tadOperacion{NuevoRobot}{Nat}{Robot}{}
 \tadOperacion{AgCaracteristica}{Robot, Caracteristica}{Robot}{}
 \tadOtrasOperaciones
 \tadOperacion{TieneCaracteristica?}{Robot, Caracteristica}{Bool}{}
 \tadAxiomas[\paratodo{Robot}{r}]
-\tadAxioma{RUR(NuevoRobot(n, e))}{n}
+\tadAxioma{RUR(NuevoRobot(n))}{n}
 \tadAxioma{RUR(AgCaracteristica(r, c))}{RUR(r)}
-\tadAxioma{CaracteristicasR(NuevoRobot(n, e))}{$\emptyset$}
+\tadAxioma{CaracteristicasR(NuevoRobot(n))}{$\emptyset$}
 \tadAxioma{CaracteristicasR(AgCaracteristica(r, c))}{Ag(c, CaracteristicasR(r))}
-\tadAxioma{estacion(NuevoRobot(n, e))}{e}
-\tadAxioma{estacion(AgCaracteristica(r, c))}{estacion(r)}
 \tadAxioma{TieneCaracteristica?(r, c)}{c $\in$ CaracteristicasR(r)}
 \end{tad}
 
 \begin{tad}{\tadNombre{Senda}}
 \tadGeneros{Senda}
-\tadExporta{Generadores, Observadores}
+\tadExporta{Senda, Generadores, Observadores, Otras Operaciones}
 \tadUsa{Bool, Robot, Restriccion, Estacion}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
 \tadOperacion{estacion1}{Senda}{Estacion}{}
 \tadOperacion{estacion2}{Senda}{Estacion}{}
 \tadOperacion{RestriccionS}{Senda}{Restriccion}{}
-\tadOperacion{}{}{}{}
 \tadGeneradores
 \tadOperacion{SendaNueva}{Estacion/e1, Estacion/e2, Restriccion}{Senda}{$\neg$(e1 \igobs e2)}
 \tadOtrasOperaciones
 \tadOperacion{Permitido?}{Senda, Robot}{Bool}{}
-\tadAxiomas
+\tadAxiomas[\paratodo{Robot}{r}, \paratodo{Senda}{s}, \paratodo{Estacion}{e1, e2}]
 \tadAxioma{estacion1(SendaNueva(e1, e2, r))}{e1}
 \tadAxioma{estacion2(SendaNueva(e1, e2, r))}{e2}
 \tadAxioma{RestriccionS(SendaNueva(e1, e2, r))}{r}
 \tadAxioma{Permitido?(s, r)}{CumpleCondicion?(RestriccionS(s), r)}
-\tadAxioma{}{}
-\tadAxioma{}{}
 \end{tad}
 
 \begin{tad}{\tadNombre{Restriccion}}
