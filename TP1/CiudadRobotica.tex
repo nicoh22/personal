@@ -11,12 +11,6 @@
 \usepackage[colorlinks=true, linkcolor=blue]{hyperref}
 \usepackage{calc}
 %TODO: alinear, y los TAD renombre: estacion, caracteristica. TADs CiudadRobotica, Senda. Igualdad Observacional de todos los tads
-% No veo como contar las infracciones si el robot guarda la estacion donde se encuentra
-%opcion 1: Generador Mover(robot, estacion, CR) en CiudadRobotica y una funcion que cuente recursivamente 
-%	los movimientos ilegales. AgregarRobot toma la estacion como parametro
-%opcion 2: En el generador NuevoRobot un parametro nat que contenga las infracciones y una funcion
-%	que la modifique. En CR una Otra Operacion Mover.
-%La opcion 2 no me gusta, parece como modificar una variable en memoria, demasiado implementativo.
 
 \begin{document}
 
@@ -29,16 +23,16 @@
 \tadOperacion{robotsC}{CiudadRobotica}{conj(Robot)}{}
 \tadOperacion{sendasC}{CiudadRobotica}{conj(Sendas)}{}
 \tadOperacion{ubicacionR}{Robot/r, CiudadRobotica/cr}{estacion}{r $\in$ robotsC(cr)}
-\tadOperacion{infraccionesR}{CiudadRobotica, Robot}{Nat}{}
+\tadOperacion{infraccionesR}{CiudadRobotica, Robot}{Nat}{r $\in$ robotsC(cr)}
 \tadGeneradores
 \tadOperacion{NuevaCiudad}{conj(Sendas)/cs}{CiudadRobotica}{$\neg$ (cs \igobs $\emptyset$)}
 \tadOperacion{AgRobot}{Robot/r1, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\not\exists$ r2: Robot) (r2 $\in$ robotsC(cr)) $\implies$ RUR(r1)\igobs RUR(r2)}
-\tadOperacion{MoverRobot}{Robot/r, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\exists$ s: Senda) s $\in$ sendasC(cr) $\implies$ s \igobs conectadasPor(e, ubicacionR(r,cr), cr)}
+\tadOperacion{MoverRobot}{Robot/r, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\exists$ s: Senda) s $\in$ sendasC(cr) $\impluego$ s \igobs conectadasPor(e, ubicacionR(r,cr), cr)}
 \tadOperacion{}{}{}{}
 \tadOtrasOperaciones
 \tadOperacion{estacionesC}{conj(Sendas)}{conj(estacion)}{}
-\tadOperacion{conectadasPor}{Estacion/e1, Estacion/e2, CiudadRobotica/cr}{Senda}{e1 $\in$ estacionesC(sendasC(cr)) $\land$ e2 $\in$ estacionesC(sendasC(cr))}
-\tadOperacion{conectadasPorAux}{Estacion e1, Estacion e2, conjSendas(cs)}{Senda}{}
+\tadOperacion{conectadasPor}{Estacion/e1, Estacion/e2, CiudadRobotica/cr}{Senda}{($\exists$ s : Senda) s $\in$ sendasC(cr) $\impluego$ (e1 \igobs estacion1(s) $\land$ e2 \igobs estacion2(s))$\lor$(e2 \igobs estacion1(s) $\land$ e1 \igobs estacion2(s))}
+\tadOperacion{conectadasPorAux}{Estacion/e1, Estacion/e2, conj(Senda)/cs}{Senda}{$\neg$(cs \igobs $\emptyset$ )}
 \tadOperacion{inspeccionLunes}{CiudadRobotica, Estacion}{CiudadRobotica}{}
 \tadAxiomas
 \tadAxioma{robotsC(NuevaCiudad(cs))}{$\emptyset$}
@@ -47,8 +41,22 @@
 \tadAxioma{sendasC(NuevaCiudad(cs))}{cs}
 \tadAxioma{sendasC(AgRobot(r, e, cr)}{sendasC(cr)}
 \tadAxioma{sendasC(MoverRobot(r, e, cr))}{sendasC(cr)}
-\tadAxioma{ubicacionR(AgRobot(r1, e, cr), r2)}{\LIF r1 \igobs r2}
-\tadAxioma{ubicacionR(MoverRobot(r1, e, cr), r2)}{}
+\tadAxioma{ubicacionR(r1, AgRobot(r2, e, cr))}{\LIF{ r1 \igobs r2} \LTHEN{ e} \LELSE{ ubicacionR(r1, cr) }\LFI}
+\tadAxioma{ubicacionR(r1, MoverRobot(r2, e, cr))}{\LIF{ r1 \igobs r2 }\LTHEN{ e }\LELSE{ ubicacionR(r1, cr) }\LFI}
+\tadAxioma{infraccionesR(NuevaCiudad(cs), r)}{0}
+\tadAxioma{infraccionesR(AgRobot(r1, e, cr), r2)}{infraccionesR(cr)}
+\tadAxioma{infraccionesR(MoverRobot(r1, e, cr), r2)}{\LIF{ r1 \igobs r2 }\\
+\LTHEN{ \LIF { $\neg$Permitido?(conectadasPor(e,ubicacionR(r2,cr),cr),r2)}\\
+\LTHEN{ 1 + infraccionesR(cr, r2) }\\
+\LELSE{ infraccionesR(cr, r2) } }\\
+\LELSE{ infraccionesR(cr, r2) } }
+\tadAxioma{estacionesC(cs)}{\LIF{ cs \igobs $\emptyset$ } \LTHEN{ $\emptyset$ }\\
+\LELSE{ Ag(estacion1(dameUno(cs)), Ag(estacion2(dameUno(cs)), estacionesC(sinUno(cs)))) }}
+\tadAxioma{conectadasPor(e1, e2, cr)}{conectadasPorAux(e1, e2, sendasC(cr))}
+\tadAxioma{conectadasPorAux(e1, e2, cs)}{\LIF{ (e1 \igobs estacion1(dameUno(cs)) $\land$ e2 \igobs estacion2(dameUno(cs)))\\
+$\lor$ (e2 \igobs estacion1(dameUno(cs)) $\land$ e1 \igobs estacion2(dameUno(cs)))}\\
+\LTHEN{ dameUno(cs)} \\
+\LELSE{ conectadasPorAux(e1, e2, sinUno(cs))} }
 \tadAxioma{}{}
 \tadAxioma{}{}
 \tadAxioma{}{}
@@ -75,6 +83,8 @@
 \tadAxioma{CaracteristicasR(NuevoRobot(n))}{$\emptyset$}
 \tadAxioma{CaracteristicasR(AgCaracteristica(r, c))}{Ag(c, CaracteristicasR(r))}
 \tadAxioma{TieneCaracteristica?(r, c)}{c $\in$ CaracteristicasR(r)}
+
+
 \end{tad}
 
 \begin{tad}{\tadNombre{Senda}}
