@@ -390,7 +390,7 @@ Arturo<T>::~Arturo(){
 template <typename T>
 ostream& Arturo<T>::mostrarArturo(ostream& os) const{
 	if(esVacia()){
-		os<<"[]\n";
+		os<<"[]";
 	}else{
 		int n(0);
 		os<<"[";
@@ -406,7 +406,7 @@ ostream& Arturo<T>::mostrarArturo(ostream& os) const{
 				os << "ARTURO(" << actual->caballero <<"), ";
 			}else{
 				if (interrupcion && actual == orador) {
-					os << actual->caballero << "*, ";
+					os << "*" << actual->caballero << ", ";
 				}else{
 					os << actual->caballero << ", ";
 				}		
@@ -415,10 +415,20 @@ ostream& Arturo<T>::mostrarArturo(ostream& os) const{
 			n++;
 		}
 		char c = 8;
-		os<< c << c <<"]\n";
+		os<< c << c <<"]";
 	}
 	return os;
 }
+	/*
+	 * Debe mostrar la mesa por el ostream os (y retornar el mismo).
+	 * Mesa vacia: []
+	 * Mesa con caballero c0 como Arturo: [ARTURO(c0)]
+	 * Mesa con 2 caballeros (Arturo está hablando): [ARTURO(c0), c1]
+	 * Mesa con 3 caballeros (Arturo está hablando): [ARTURO(c0), c1, c2]
+	 * Mesa con 3 caballeros (c1 está hablando): [c1, c2, ARTURO(c0)]
+	 * Mesa con 3 caballeros (c1 fue interrumpido): [ARTURO(c0),*c1,c2]
+	 */
+
 
 
 template <typename T>

@@ -39,7 +39,7 @@ void check_crear_mesa_borrar_elem_da_vacia() {
 	ASSERT_EQ(mesa.esVacia(), true);
 }
 
-void check_comparacion_mesas_construidas_igual(){
+void check_comparacion(){
 	Arturo <int> mesa1;
 	Arturo <int> mesa2;
 	Arturo <int> mesa3;
@@ -65,6 +65,10 @@ void check_comparacion_mesas_construidas_igual(){
 	ASSERT_EQ(mesa3 == mesa1, false);
 	ASSERT_EQ(mesa2 == mesa4, false);
 	ASSERT_EQ(mesa3 == mesa4, false);
+	
+	mesa1.proximoCaballero();
+	ASSERT_EQ(mesa1 == mesa2, false);
+	
 	
 	mesa5.sentarArturo(mesa1);
 	mesa6.sentarArturo(mesa1);
@@ -94,6 +98,11 @@ void check_arturo_de_arturo(){
 
 	ASSERT(dobleMesa.caballeroActual() == mesa1);
 }
+
+void check_arturo_de_arturo_avanz(){
+
+}
+
 void check_copia(){
 	Arturo<char> mesa1;
 	int i = 1;
@@ -117,7 +126,7 @@ int main() {
   RUN_TEST(check_crear_mesa_borrar_elem_da_vacia);
   RUN_TEST(check_arturo_de_arturo); 
   RUN_TEST(check_copia);
-  RUN_TEST(check_comparacion_mesas_construidas_igual);
+  RUN_TEST(check_comparacion);
   
   Arturo<char> mesa1;
   
