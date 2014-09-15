@@ -196,7 +196,7 @@ bool Arturo<T>::esVacia() const{
 
 template <typename T>
 bool Arturo<T>::arturoPresente() const{
-	return rey == NULL;
+	return rey != NULL;
 }
 
 template <typename T>
@@ -212,7 +212,7 @@ void Arturo<T>::sentarArturo(const T& a){
 
 template <typename T>
 void Arturo<T>::incorporarCaballero(const T& c){
-	Nodo *nuevo = new Arturo<T>::Nodo(c);
+	Nodo *nuevo = new Nodo(c);
 	Nodo *derechoActual;
 
 	nuevo->ant = rey;
@@ -431,6 +431,6 @@ template <typename T>
 Arturo<T>::Nodo::Nodo(const Nodo & c) :
 caballero(c.caballero), sig(NULL), ant(NULL)  {}
 template <typename T>
-Arturo<T>::Nodo::~Nodo() {}
+Arturo<T>::Nodo::~Nodo(){}
 
 #endif //ARTURO_H_
