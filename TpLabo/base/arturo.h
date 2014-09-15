@@ -390,25 +390,34 @@ Arturo<T>::~Arturo(){
 template <typename T>
 ostream& Arturo<T>::mostrarArturo(ostream& os) const{
 	if(esVacia()){
-		os<<"[]"
+		os<<"[]\n";
 	}else{
+		int n(0);
 		os<<"[";
 		Nodo *actual;
 		if(interrupcion){
-		actual = rey;
-		}else{actual = orador}
-		
-		while(){
-			if (interrupcion && actual == orador) {
-				os << actual->caballero << "*, ";
-			}
-			else {
-				os << actual->caballero << ", ";
-			}		
+			actual = rey;
+		}else{
+			actual = orador;
 		}
+		
+		while(n < tamanio()){
+			if (actual == rey){
+				os << "ARTURO(" << actual->caballero <<"), ";
+			}else{
+				if (interrupcion && actual == orador) {
+					os << actual->caballero << "*, ";
+				}else{
+					os << actual->caballero << ", ";
+				}		
+				}
+			actual = actual->sig;
+			n++;
+		}
+		char c = 8;
+		os<< c << c <<"]\n";
 	}
-
-	return os
+	return os;
 }
 
 

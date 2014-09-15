@@ -118,7 +118,17 @@ int main() {
   RUN_TEST(check_arturo_de_arturo); 
   RUN_TEST(check_copia);
   RUN_TEST(check_comparacion_mesas_construidas_igual);
-
+  
+  Arturo<char> mesa1;
+  
+  cout << mesa1;
+  
+  mesa1.sentarArturo('R');
+  mesa1.incorporarCaballero('2');
+  mesa1.incorporarCaballero('D');
+  mesa1.incorporarCaballero('2');
+  
+  cout << mesa1;
   return 0;
 }
 
