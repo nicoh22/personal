@@ -204,7 +204,7 @@ Arturo<T>::Arturo():len(0), rey(NULL), orador(NULL), interrupcion(false){}
 
 template <typename T>
 void Arturo<T>::sentarArturo(const T& a){
-	Arturo<T>::Nodo *nuevo = new Arturo<T>::Nodo(a);
+	Nodo *nuevo = new Nodo(a);
 	this->rey = nuevo;
 	this->orador = nuevo;
 	len++;
@@ -330,7 +330,6 @@ void Arturo<T>::cambioDeLugar(const T& c){
 	if(rey->ant->caballero != c){
 		rey->ant->sig = rey->sig;
 		rey->sig->ant = rey->ant;	
-		
 		Nodo *actual = rey->sig;
 		int n(0);
 		while (n < tamanio() - 1){
@@ -359,8 +358,7 @@ bool Arturo<T>::operator==(const Arturo<T>& otra) const{
 		Nodo *actualOtra = otra.orador;
 		Nodo *actualThis = orador;
 			while(n < tamanio()){
-				if(!(actualOtra->caballero == 
-				actualThis->caballero)){
+				if(!(actualOtra->caballero == actualThis->caballero)){
 					return false;
 				}
 			
@@ -368,8 +366,7 @@ bool Arturo<T>::operator==(const Arturo<T>& otra) const{
 				actualThis = actualThis->sig;
 				n++;
 			}
-			return orador->caballero == otra.orador->caballero &&
-			rey->caballero == otra.rey->caballero;
+			return rey->caballero == otra.rey->caballero;
 		}
 	}
 }
@@ -377,24 +374,43 @@ bool Arturo<T>::operator==(const Arturo<T>& otra) const{
 template <typename T>
 Arturo<T>::~Arturo(){
 	Nodo* actual = rey;
+	Nodo* aBorrar;
 	while(tamanio() > 1){
-		if(actual != rey){
-			expulsarCaballero(actual->caballero);
+		aBorrar = actual;
+		actual = actual->sig;
+		if(aBorrar != rey){
+			expulsarCaballero(aBorrar->caballero);
 		}
-			actual = actual->sig;
 	}
 	if(arturoPresente()){
 		expulsarCaballero(rey->caballero);
 	}
 }
-/*
+
 template <typename T>
 ostream& Arturo<T>::mostrarArturo(ostream& os) const{
-os<<
+	if(esVacia()){
+		os<<"[]"
+	}else{
+		os<<"[";
+		Nodo *actual;
+		if(interrupcion){
+		actual = rey;
+		}else{actual = orador}
+		
+		while(){
+			if (interrupcion && actual == orador) {
+				os << actual->caballero << "*, ";
+			}
+			else {
+				os << actual->caballero << ", ";
+			}		
+		}
+	}
 
-return os
+	return os
 }
-*/
+
 
 template <typename T>
 Arturo<T>::Nodo::Nodo() :

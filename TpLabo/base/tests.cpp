@@ -117,7 +117,7 @@ int main() {
   RUN_TEST(check_crear_mesa_borrar_elem_da_vacia);
   RUN_TEST(check_arturo_de_arturo); 
   RUN_TEST(check_copia);
-  RUN_TEST(check_comparacion_mesas_construidas_igual)
+  RUN_TEST(check_comparacion_mesas_construidas_igual);
 
   return 0;
 }
