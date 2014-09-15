@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.8.24)  2 SEP 2014 16:36
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.8.24)  2 SEP 2014 19:39
 entering extended mode
  %&-line parsing enabled.
 **CiudadRobotica.tex
@@ -468,17 +468,17 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 18.
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 ) [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] AED: lastpage setting 
-LastPage [3]
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] AED: lastpage sett
+ing LastPage [4]
 (./CiudadRobotica.aux) ) 
 Here is how much of TeX's memory you used:
- 6754 strings out of 494999
- 93117 string characters out of 1180816
- 189018 words of memory out of 3000000
- 9803 multiletter control sequences out of 15000+50000
+ 6759 strings out of 494999
+ 93174 string characters out of 1180816
+ 194018 words of memory out of 3000000
+ 9807 multiletter control sequences out of 15000+50000
  9403 words of font info for 30 fonts, out of 3000000 for 9000
  54 hyphenation exceptions out of 8191
- 38i,16n,43p,294b,387s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,16n,43p,294b,406s stack positions out of 5000i,500n,10000p,200000b,50000s
  </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/
 ec/ecrm1000.600pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecc
 c1000.600pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1000.
@@ -488,9 +488,9 @@ f-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fo
 nts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/pub
 lic/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
 cm/cmsy10.pfb>
-Output written on CiudadRobotica.pdf (3 pages, 91189 bytes).
+Output written on CiudadRobotica.pdf (4 pages, 94625 bytes).
 PDF statistics:
- 146 PDF objects out of 1000 (max. 8388607)
- 4 named destinations out of 1000 (max. 500000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 5 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

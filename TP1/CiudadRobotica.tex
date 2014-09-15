@@ -17,7 +17,7 @@
 \begin{tad}{\tadNombre{CiudadRobotica}}
 \tadGeneros{CiudadRobotica}
 \tadExporta{CiudadRobotica, Generadores, Observadores, Otras Operaciones}
-\tadUsa{Nat, Bool, ...}
+\tadUsa{Nat, Bool, Conj($\alpha$), Estacion, Senda, Robot}
 \tadIgualdadObservacional{}{}{}{}
 \tadObservadores
 \tadOperacion{robotsC}{CiudadRobotica}{conj(Robot)}{}
@@ -26,14 +26,21 @@
 \tadOperacion{infraccionesR}{CiudadRobotica, Robot}{Nat}{r $\in$ robotsC(cr)}
 \tadGeneradores
 \tadOperacion{NuevaCiudad}{conj(Sendas)/cs}{CiudadRobotica}{$\neg$ (cs \igobs $\emptyset$)}
-\tadOperacion{AgRobot}{Robot/r1, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\not\exists$ r2: Robot) (r2 $\in$ robotsC(cr)) $\implies$ RUR(r1)\igobs RUR(r2)}
+\tadOperacion{AgRobot}{Robot/r1, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\not\exists$ r2: Robot) (r2 $\in$ robotsC(cr)) $\implies$ RUR(r1)\igobs RUR(r2) $\land$\\
+($\exists$ e2 : Estacion) e2 $\in$ estacionesC(sendasC(cr)) $\impluego$ Permitido?(r, conectadasPor(e, e2, cr))}
 \tadOperacion{MoverRobot}{Robot/r, Estacion/e, CiudadRobotica/cr}{CiudadRobotica}{($\exists$ s: Senda) s $\in$ sendasC(cr) $\impluego$ s \igobs conectadasPor(e, ubicacionR(r,cr), cr)}
-\tadOperacion{}{}{}{}
 \tadOtrasOperaciones
 \tadOperacion{estacionesC}{conj(Sendas)}{conj(estacion)}{}
 \tadOperacion{conectadasPor}{Estacion/e1, Estacion/e2, CiudadRobotica/cr}{Senda}{($\exists$ s : Senda) s $\in$ sendasC(cr) $\impluego$ (e1 \igobs estacion1(s) $\land$ e2 \igobs estacion2(s))$\lor$(e2 \igobs estacion1(s) $\land$ e1 \igobs estacion2(s))}
 \tadOperacion{conectadasPorAux}{Estacion/e1, Estacion/e2, conj(Senda)/cs}{Senda}{$\neg$(cs \igobs $\emptyset$ )}
 \tadOperacion{inspeccionLunes}{CiudadRobotica, Estacion}{CiudadRobotica}{}
+\tadOperacion{hayInfractor?}{CiudadRobotica, conj(Robot)}{Bool}{}
+\tadOperacion{eliminarRobot}{Robot, CiudadRobotica}{CiudadRobotica}{}
+\tadOperacion{seleccionarInfractor}{CiudadRobotica, Estacion}{Robot}{}
+\tadOperacion{filtroRobEst}{CiudadRobotica, conj(Robot), Estacion}{conj(Robot)}{}
+\tadOperacion{Max}{CiudadRobotica, conj(Robot), Nat}{Nat}{}
+\tadOperacion{maximosInf}{CiudadRobotica, conj(Robot), Nat}{conj(Robot)}{}
+\tadOperacion{}{}{}{}
 \tadAxiomas
 \tadAxioma{robotsC(NuevaCiudad(cs))}{$\emptyset$}
 \tadAxioma{robotsC(AgRobot(r, e, cr))}{Ag(e,robotsC(cr))}
@@ -57,9 +64,39 @@
 $\lor$ (e2 \igobs estacion1(dameUno(cs)) $\land$ e1 \igobs estacion2(dameUno(cs)))}\\
 \LTHEN{ dameUno(cs)} \\
 \LELSE{ conectadasPorAux(e1, e2, sinUno(cs))} }
-\tadAxioma{}{}
-\tadAxioma{}{}
-\tadAxioma{}{}
+%%
+\tadAxioma{inspeccionLunes(cr, e)}{\LIF{ hayInfractor?(cr, filtroRobEst(cr, robotsC(cr), e)) }\\
+\LTHEN{ eliminarRobot(seleccionarInfractor(cr, e),cr) } \\
+\LELSE{ cr } }
+%%
+\tadAxioma{hayInfractor?(cr, c)}{\LIF{ c \igobs $\emptyset$ }\LTHEN{ false }\\
+ \LELSE{ \LIF($\neg$(infraccionesR(dameUno(c)) \igobs 0)}\\
+\LTHEN{ true }\\
+\LELSE{ hayInfractor?(cr, sinUno(c))}}
+%%
+\tadAxioma{seleccionarInfractor(cr, e)}{ dameUno(maximosInf(cr, filtroRobEst(cr,robotsC(cr),e),\\
+Max(cr, filtroRobEst(cr, robotsC(cr), e), 0)))}
+%%
+\tadAxioma{filtroRobEst(cr, c, e)}{\LIF{ robotsC(cr) \igobs $\emptyset$ }\LTHEN{ $\emptyset$ }\\
+\LELSE{ \LIF{ ubicacionR(dameUno(c), cr) \igobs e} \\
+\LTHEN{Ag(dameUno(c),filtroRobEst(cr, sinUno(c), e)) }\\
+\LELSE{ filtroRobEst(cr, sinUno(c), e)} } }
+%%
+\tadAxioma{Max(cr, c, n)}{\LIF{ c \igobs $\emptyset$}\LTHEN{ n }\\
+\LELSE{ \LIF{ infraccionesR(dameUno(c), cr) > n }\\
+\LTHEN{ Max(cr, sinUno(c), infraccionesR(dameUno(c), cr))}\\
+\LELSE{ Max(cr, sinUno(c), n)} }}
+%%
+\tadAxioma{maximosInf(cr, c, n)}{\LIF{ c \igobs $\emptyset$ } \LTHEN{ $\emptyset$ }\\
+\LELSE{ \LIF{ infraccionesR(cr, dameUno(c)) \igobs n) }\\
+ \LTHEN{ Ag(dameUno(c), maximosInf(cr, sinUno(c), n)) }\\
+\LELSE{ maximosInf(cr, sinUno(c), n) }
+}}
+\tadAxioma{eliminarRobot(r, NuevaCiudad(cs))}{NuevaCiudad(cs)}
+\tadAxioma{eliminarRobot(r1, AgRobot(r2, e, cr))}{\LIF{ r1 \igobs r2 } \LTHEN{ cr } \LELSE{ eliminarRobot(r1, cr)}}
+\tadAxioma{eliminarRobot(r1,MoverRobot(r2, e, cr))}{\LIF{ r1 \igobs r2 } \LTHEN{ MoverRobot(r2, e, eliminarRobot(r1, cr))} \\
+\LELSE{ eliminarRobot(r1, cr)}}
+
 \end{tad}
 \newpage
 
@@ -86,7 +123,7 @@ $\lor$ (e2 \igobs estacion1(dameUno(cs)) $\land$ e1 \igobs estacion2(dameUno(cs)
 
 
 \end{tad}
-
+\newpage
 \begin{tad}{\tadNombre{Senda}}
 \tadGeneros{Senda}
 \tadExporta{Senda, Generadores, Observadores, Otras Operaciones}
