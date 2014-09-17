@@ -48,6 +48,8 @@ void check_comparacion(){
 	Arturo < Arturo<int> > mesa6;
 	int i = 1;
 	
+	ASSERT(mesa2 == mesa1);
+	
 	mesa1.sentarArturo(0);
 	mesa2.sentarArturo(0);
 	mesa3.sentarArturo(0);
@@ -120,6 +122,36 @@ void check_copia(){
 	ASSERT(mesa1 == mesa2);
 }
 
+void check_cambio_lugar(){
+	Arturo<int> mesa1;
+	
+	mesa1.sentarArturo(0);
+	mesa1.incorporarCaballero(4);
+	mesa1.incorporarCaballero(3);
+	mesa1.incorporarCaballero(2);
+	mesa1.incorporarCaballero(1);
+	
+	mesa1.cambioDeLugar(1);
+	
+	ASSERT_EQ(mesa1.caballeroActual(), 0);
+	mesa1.proximoCaballero();
+	ASSERT_EQ(mesa1.caballeroActual(), 2);
+}
+
+void imprime_Arturos(){
+	Arturo<char> mesa1;
+	  
+	cout << "\n Arturo Vacio: " << mesa1 << "\n";
+	  
+	mesa1.sentarArturo('R');
+	mesa1.incorporarCaballero('2');
+	mesa1.incorporarCaballero('D');
+	mesa1.incorporarCaballero('2');
+	  
+	cout << " Arturo<char>: " << mesa1 << "\n";
+
+}
+
 
 int main() {
   RUN_TEST(check_crear_mesa_vacia);
@@ -127,17 +159,8 @@ int main() {
   RUN_TEST(check_arturo_de_arturo); 
   RUN_TEST(check_copia);
   RUN_TEST(check_comparacion);
-  
-  Arturo<char> mesa1;
-  
-  cout << mesa1;
-  
-  mesa1.sentarArturo('R');
-  mesa1.incorporarCaballero('2');
-  mesa1.incorporarCaballero('D');
-  mesa1.incorporarCaballero('2');
-  
-  cout << mesa1;
-  return 0;
+  RUN_TEST(check_cambio_lugar);
+  RUN_TEST(imprime_Arturos);
+    return 0;
 }
 

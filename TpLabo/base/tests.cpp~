@@ -39,7 +39,7 @@ void check_crear_mesa_borrar_elem_da_vacia() {
 	ASSERT_EQ(mesa.esVacia(), true);
 }
 
-void check_comparacion_mesas_construidas_igual(){
+void check_comparacion(){
 	Arturo <int> mesa1;
 	Arturo <int> mesa2;
 	Arturo <int> mesa3;
@@ -47,6 +47,8 @@ void check_comparacion_mesas_construidas_igual(){
 	Arturo < Arturo<int> > mesa5;
 	Arturo < Arturo<int> > mesa6;
 	int i = 1;
+	
+	ASSERT(mesa2 == mesa1);
 	
 	mesa1.sentarArturo(0);
 	mesa2.sentarArturo(0);
@@ -65,6 +67,10 @@ void check_comparacion_mesas_construidas_igual(){
 	ASSERT_EQ(mesa3 == mesa1, false);
 	ASSERT_EQ(mesa2 == mesa4, false);
 	ASSERT_EQ(mesa3 == mesa4, false);
+	
+	mesa1.proximoCaballero();
+	ASSERT_EQ(mesa1 == mesa2, false);
+	
 	
 	mesa5.sentarArturo(mesa1);
 	mesa6.sentarArturo(mesa1);
@@ -94,6 +100,11 @@ void check_arturo_de_arturo(){
 
 	ASSERT(dobleMesa.caballeroActual() == mesa1);
 }
+
+void check_arturo_de_arturo_avanz(){
+
+}
+
 void check_copia(){
 	Arturo<char> mesa1;
 	int i = 1;
@@ -101,15 +112,44 @@ void check_copia(){
 	mesa1.sentarArturo('a');
 	while (i < 20){
 		mesa1.incorporarCaballero(c);
-	
 		c++;
 		i++;
 	}
 	
 	Arturo<char> mesa2(mesa1);
-	
+
 	ASSERT(mesa1.tamanio() == mesa2.tamanio());
 	ASSERT(mesa1 == mesa2);
+}
+
+void check_cambio_Lugar(){
+	Arturo<int> mesa1;
+	
+	mesa1.sentarArturo(0);
+	mesa1.incorporarCaballero(4);
+	mesa1.incorporarCaballero(3);
+	mesa1.incorporarCaballero(2);
+	mesa1.incorporarCaballero(1);
+	
+	mesa1.cambioDeLugar(1);
+	
+	ASSERT_EQ(mesa1.caballeroActual(), 0);
+	mesa1.proximoCaballero();
+	ASSERT_EQ(mesa1.caballeroActual(), 2);
+}
+
+void imprime_Arturos(){
+	Arturo<char> mesa1;
+	  
+	cout << "\n Arturo Vacio: " << mesa1 << "\n";
+	  
+	mesa1.sentarArturo('R');
+	mesa1.incorporarCaballero('2');
+	mesa1.incorporarCaballero('D');
+	mesa1.incorporarCaballero('2');
+	  
+	cout << " Arturo<char>: " << mesa1 << "\n";
+
 }
 
 
@@ -118,8 +158,8 @@ int main() {
   RUN_TEST(check_crear_mesa_borrar_elem_da_vacia);
   RUN_TEST(check_arturo_de_arturo); 
   RUN_TEST(check_copia);
-  RUN_TEST(check_comparacion_mesas_construidas_igual)
-
-  return 0;
+  RUN_TEST(check_comparacion);
+  RUN_TEST(imprime_Arturos);
+    return 0;
 }
 
