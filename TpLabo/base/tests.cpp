@@ -102,7 +102,32 @@ void check_arturo_de_arturo(){
 }
 
 void check_arturo_de_arturo_avanz(){
-
+	Arturo<char> mesa1;
+	Arturo< Arturo<char> > mesa2;
+	Arturo<char> mesa3;
+	mesa2.sentarArturo(mesa1);
+	mesa2.incorporarCaballero(mesa3);
+	
+	cout << "\n" << " Mesa0.1: " << mesa2 << "\n";
+	mesa1.sentarArturo('a');
+	mesa1.incorporarCaballero('e');
+	mesa1.incorporarCaballero('d');
+	mesa1.incorporarCaballero('c');
+	mesa1.incorporarCaballero('b');
+	
+	mesa2.incorporarCaballero(mesa1);
+	cout << " Mesa1.0: " << mesa2 << "\n";
+	
+	mesa1.proximoCaballero();
+	mesa1.hablaArturo();
+	
+	mesa2.incorporarCaballero(mesa1);
+	cout << " Mesa2.0: " << mesa2 << "\n";
+	mesa2.proximoCaballero();
+	cout << " Mesa2.5: " << mesa2 << "\n";
+	mesa2.expulsarCaballero(mesa1);
+	cout << " Mesa3.0: " << mesa2 << "\n";
+	
 }
 
 void check_copia(){
@@ -120,6 +145,15 @@ void check_copia(){
 
 	ASSERT(mesa1.tamanio() == mesa2.tamanio());
 	ASSERT(mesa1 == mesa2);
+	
+	mesa1.proximoCaballero();
+	mesa1.proximoCaballero();
+	mesa1.expulsarCaballero('e');
+	
+	Arturo<char> mesa3(mesa1);
+	ASSERT(mesa1 == mesa3);
+	
+	
 }
 
 void check_cambio_lugar(){
@@ -193,7 +227,7 @@ void imprime_Arturos(){
 	mesa1.sentarArturo('R');
 	mesa1.incorporarCaballero('2');
 	mesa1.incorporarCaballero('D');
-	mesa1.incorporarCaballero('2');
+	mesa1.incorporarCaballero('3');
 	  
 	cout << " Mesa1: " << mesa1 << "\n";
 	
@@ -213,7 +247,8 @@ void imprime_Arturos(){
 	Arturo<char> mesa3;
 	mesa2.incorporarCaballero(mesa3);
 	cout << " Mesa2.sentarArturo: " << mesa2 << "\n";
-
+	
+	ASSERT_EQ(mesa2.tamanio(), 2);
 }
 
 
@@ -226,6 +261,7 @@ int main() {
   RUN_TEST(check_cambio_lugar);
   RUN_TEST(check_proxAnt);
   RUN_TEST(imprime_Arturos);
+  RUN_TEST(check_arturo_de_arturo_avanz);
     return 0;
 }
 

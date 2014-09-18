@@ -286,14 +286,17 @@ Arturo<T>::Arturo(const Arturo<T>& a):len(0), rey(NULL), orador(NULL), interrupc
 			if(actual == a.orador){
 				orador = new Nodo(a.orador->caballero);
 				orador->ant = rey;
-				if(tamanio() > 2){
-					orador->sig = rey->sig;
-					rey->sig->ant = orador;
-					rey->sig = orador;
+				Nodo *derechoActual;
+				derechoActual = rey->sig;
+				rey->sig = orador;
+	
+				if (derechoActual != NULL){
+					derechoActual->ant = orador;
+					orador->sig = derechoActual;	
 				}else{
 					orador->sig = rey;
 					rey->ant = orador;
-				}			
+				}
 				len++;
 			}else{
 				incorporarCaballero(actual->caballero);
@@ -334,7 +337,7 @@ void Arturo<T>::cambioDeLugar(const T& c){
 		int n(0);
 		while (n < tamanio() - 1){
 			
-			if(actual->caballero = c){
+			if(actual->caballero == c){
 				rey->sig = actual->sig;
 				rey->ant = actual;
 				actual->sig->ant = rey;
@@ -403,19 +406,25 @@ ostream& Arturo<T>::mostrarArturo(ostream& os) const{
 		
 		while(n < tamanio()){
 			if (actual == rey){
-				os << "ARTURO(" << actual->caballero <<"), ";
+				os << "ARTURO(" << actual->caballero << ")";
 			}else{
 				if (interrupcion && actual == orador) {
-					os << "*" << actual->caballero << ", ";
+					os << "*" << actual->caballero;
 				}else{
-					os << actual->caballero << ", ";
+					os << actual->caballero;
 				}		
 				}
+			if(n != tamanio() - 1){
+			os << ", ";
+			} else{
+			os << "]";
+			}
+			
 			actual = actual->sig;
 			n++;
 		}
-		char c = 8;
-		os<< c << c <<"]";
+//		char c = 8;
+//		os<< c << c <<"]";
 	}
 	return os;
 }
