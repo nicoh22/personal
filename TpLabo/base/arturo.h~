@@ -196,7 +196,7 @@ bool Arturo<T>::esVacia() const{
 
 template <typename T>
 bool Arturo<T>::arturoPresente() const{
-	return rey == NULL;
+	return rey != NULL;
 }
 
 template <typename T>
@@ -204,7 +204,7 @@ Arturo<T>::Arturo():len(0), rey(NULL), orador(NULL), interrupcion(false){}
 
 template <typename T>
 void Arturo<T>::sentarArturo(const T& a){
-	Arturo<T>::Nodo *nuevo = new Arturo<T>::Nodo(a);
+	Nodo *nuevo = new Nodo(a);
 	this->rey = nuevo;
 	this->orador = nuevo;
 	len++;
@@ -212,7 +212,7 @@ void Arturo<T>::sentarArturo(const T& a){
 
 template <typename T>
 void Arturo<T>::incorporarCaballero(const T& c){
-	Nodo *nuevo = new Arturo<T>::Nodo(c);
+	Nodo *nuevo = new Nodo(c);
 	Nodo *derechoActual;
 
 	nuevo->ant = rey;
@@ -330,24 +330,23 @@ void Arturo<T>::cambioDeLugar(const T& c){
 	if(rey->ant->caballero != c){
 		rey->ant->sig = rey->sig;
 		rey->sig->ant = rey->ant;	
-		
 		Nodo *actual = rey->sig;
 		int n(0);
 		while (n < tamanio() - 1){
-			n++;
+			
 			if(actual->caballero = c){
 				rey->sig = actual->sig;
 				rey->ant = actual;
+				actual->sig->ant = rey;
 				actual->sig = rey; 
 				n = tamanio();	
 			}else{
 				actual = actual->sig;
 			}
+			n++;		
 		}
 	}
 }
-
-
 
 template <typename T>
 bool Arturo<T>::operator==(const Arturo<T>& otra) const{
@@ -359,8 +358,7 @@ bool Arturo<T>::operator==(const Arturo<T>& otra) const{
 		Nodo *actualOtra = otra.orador;
 		Nodo *actualThis = orador;
 			while(n < tamanio()){
-				if(!(actualOtra->caballero == 
-				actualThis->caballero)){
+				if(!(actualOtra->caballero == actualThis->caballero)){
 					return false;
 				}
 			
@@ -368,8 +366,7 @@ bool Arturo<T>::operator==(const Arturo<T>& otra) const{
 				actualThis = actualThis->sig;
 				n++;
 			}
-			return orador->caballero == otra.orador->caballero &&
-			rey->caballero == otra.rey->caballero;
+			return rey->caballero == otra.rey->caballero;
 		}
 	}
 }
@@ -377,24 +374,62 @@ bool Arturo<T>::operator==(const Arturo<T>& otra) const{
 template <typename T>
 Arturo<T>::~Arturo(){
 	Nodo* actual = rey;
+	Nodo* aBorrar;
 	while(tamanio() > 1){
-		if(actual != rey){
-			expulsarCaballero(actual->caballero);
+		aBorrar = actual;
+		actual = actual->sig;
+		if(aBorrar != rey){
+			expulsarCaballero(aBorrar->caballero);
 		}
-			actual = actual->sig;
 	}
 	if(arturoPresente()){
 		expulsarCaballero(rey->caballero);
 	}
 }
-/*
+
 template <typename T>
 ostream& Arturo<T>::mostrarArturo(ostream& os) const{
-os<<
-
-return os
+	if(esVacia()){
+		os<<"[]";
+	}else{
+		int n(0);
+		os<<"[";
+		Nodo *actual;
+		if(interrupcion){
+			actual = rey;
+		}else{
+			actual = orador;
+		}
+		
+		while(n < tamanio()){
+			if (actual == rey){
+				os << "ARTURO(" << actual->caballero <<"), ";
+			}else{
+				if (interrupcion && actual == orador) {
+					os << "*" << actual->caballero << ", ";
+				}else{
+					os << actual->caballero << ", ";
+				}		
+				}
+			actual = actual->sig;
+			n++;
+		}
+		char c = 8;
+		os<< c << c <<"]";
+	}
+	return os;
 }
-*/
+	/*
+	 * Debe mostrar la mesa por el ostream os (y retornar el mismo).
+	 * Mesa vacia: []
+	 * Mesa con caballero c0 como Arturo: [ARTURO(c0)]
+	 * Mesa con 2 caballeros (Arturo está hablando): [ARTURO(c0), c1]
+	 * Mesa con 3 caballeros (Arturo está hablando): [ARTURO(c0), c1, c2]
+	 * Mesa con 3 caballeros (c1 está hablando): [c1, c2, ARTURO(c0)]
+	 * Mesa con 3 caballeros (c1 fue interrumpido): [ARTURO(c0),*c1,c2]
+	 */
+
+
 
 template <typename T>
 Arturo<T>::Nodo::Nodo() :
@@ -406,6 +441,6 @@ template <typename T>
 Arturo<T>::Nodo::Nodo(const Nodo & c) :
 caballero(c.caballero), sig(NULL), ant(NULL)  {}
 template <typename T>
-Arturo<T>::Nodo::~Nodo() {}
+Arturo<T>::Nodo::~Nodo(){}
 
 #endif //ARTURO_H_

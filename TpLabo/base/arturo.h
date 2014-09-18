@@ -333,20 +333,20 @@ void Arturo<T>::cambioDeLugar(const T& c){
 		Nodo *actual = rey->sig;
 		int n(0);
 		while (n < tamanio() - 1){
-			n++;
+			
 			if(actual->caballero = c){
 				rey->sig = actual->sig;
 				rey->ant = actual;
+				actual->sig->ant = rey;
 				actual->sig = rey; 
 				n = tamanio();	
 			}else{
 				actual = actual->sig;
 			}
+			n++;		
 		}
 	}
 }
-
-
 
 template <typename T>
 bool Arturo<T>::operator==(const Arturo<T>& otra) const{

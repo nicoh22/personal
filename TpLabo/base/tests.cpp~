@@ -122,7 +122,7 @@ void check_copia(){
 	ASSERT(mesa1 == mesa2);
 }
 
-void check_cambio_Lugar(){
+void check_cambio_lugar(){
 	Arturo<int> mesa1;
 	
 	mesa1.sentarArturo(0);
@@ -136,6 +136,53 @@ void check_cambio_Lugar(){
 	ASSERT_EQ(mesa1.caballeroActual(), 0);
 	mesa1.proximoCaballero();
 	ASSERT_EQ(mesa1.caballeroActual(), 2);
+	
+	Arturo<char> mesa2;
+	mesa2.sentarArturo('a');
+	mesa2.incorporarCaballero('c');
+	mesa2.incorporarCaballero('b');
+	
+	mesa2.cambioDeLugar('b');
+	ASSERT_EQ(mesa2.caballeroActual(), 'a');
+	mesa2.proximoCaballero();
+	ASSERT_EQ(mesa2.caballeroActual(), 'c');
+	mesa2.caballeroAnterior();
+	mesa2.caballeroAnterior();
+	ASSERT_EQ(mesa2.caballeroActual(), 'b');
+	
+	mesa2.cambioDeLugar('b'); //cambio de lugar al anterior de el
+	mesa2.proximoCaballero();
+	ASSERT_EQ(mesa2.caballeroActual(), 'a');// el rey se mantiene en el mismo lugar?
+	
+}
+
+void check_proxAnt(){
+	Arturo<char> mesa1;
+	Arturo< Arturo<char> > mesa2;
+	char c = 'k';
+	mesa1.sentarArturo('a');
+	int i = 0;
+	
+	while(i < 10){
+		mesa1.incorporarCaballero(c);
+		c--;
+		i++;
+	}
+	
+	ASSERT_EQ(mesa1.caballeroActual(), 'a');
+	mesa1.proximoCaballero();
+	ASSERT_EQ(mesa1.caballeroActual(), 'b');
+	mesa1.caballeroAnterior();
+	ASSERT_EQ(mesa1.caballeroActual(), 'a');
+	mesa1.caballeroAnterior();
+	ASSERT_EQ(mesa1.caballeroActual(), 'k');
+	
+	mesa1.proximoCaballero();
+	mesa1.proximoCaballero();
+	mesa1.proximoCaballero();
+	mesa1.proximoCaballero();
+	ASSERT_EQ(mesa1.caballeroActual(), 'd');
+	
 }
 
 void imprime_Arturos(){
@@ -148,7 +195,24 @@ void imprime_Arturos(){
 	mesa1.incorporarCaballero('D');
 	mesa1.incorporarCaballero('2');
 	  
-	cout << " Arturo<char>: " << mesa1 << "\n";
+	cout << " Mesa1: " << mesa1 << "\n";
+	
+	mesa1.proximoCaballero();
+	cout << " Mesa1.proximoCaballero(): " << mesa1 << "\n";
+	
+	mesa1.hablaArturo();
+	cout << " Mesa1.hablaArturo(): " << mesa1 << "\n";
+	
+	mesa1.proximoCaballero();
+	cout << " Mesa1.proximoCaballero(): " << mesa1 << "\n";
+	
+	Arturo< Arturo<char> > mesa2;
+	cout << " Creando Mesa2: " << mesa2 << "\n";
+	
+	mesa2.sentarArturo(mesa1);
+	mesa3 Arturo<char>;
+	mesa2.incorporarCaballero(mesa3);
+	cout << " Mesa2.sentarArturo: " << mesa2 << "\n";
 
 }
 
@@ -159,6 +223,8 @@ int main() {
   RUN_TEST(check_arturo_de_arturo); 
   RUN_TEST(check_copia);
   RUN_TEST(check_comparacion);
+  RUN_TEST(check_cambio_lugar);
+  RUN_TEST(check_proxAnt);
   RUN_TEST(imprime_Arturos);
     return 0;
 }
