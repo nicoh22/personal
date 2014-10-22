@@ -138,7 +138,7 @@
   {$res \igobs$ crear($m$)}%
   [$\Theta(1)$]
   [genera una nueva Ciudad.]
-  [lo ideal seria no copiar ese mapa no?]
+  [lo ideal seri no copiar ese mapa no?]
   
   \InterfazFuncion{Entrar}{\In{ts}{conj(tag)}, \In{e}{estacion}, \Inout{c}{ciudad}}{}
   [$c \igobs c_0 \land e \in$ estaciones($c$)]

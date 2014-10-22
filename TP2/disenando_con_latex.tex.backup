@@ -132,14 +132,13 @@
 
   \textbf{usa}: 
   
-  \Titulo{Operaciones básicas de ciudad}
+  \Titulo{Operaciones básicas de lista}
 
   \InterfazFuncion{Crear}{\In{m}{mapa}}{ciudad}%
   {$res \igobs$ crear($m$)}%
   [$\Theta(1)$]
   [genera una nueva Ciudad.]
-  [lo ideal seria no copiar ese mapa no?]
-  
+
   \InterfazFuncion{Entrar}{\In{ts}{conj(tag)}, \In{e}{estacion}, \Inout{c}{ciudad}}{}
   [$c \igobs c_0 \land e \in$ estaciones($c$)]
   {$c \igobs$ entrar($ts, e, c_0$)}
@@ -223,7 +222,7 @@
       \tupItem{presente?}{bool}%
       \tupItem{\\est}{estacion}%
       \tupItem{\\infr}{nat}%
-      \tupItem{\\tags}{conjTrie(tags)}%
+      \tupItem{\\tags}{conj(tags)}%
       \tupItem{\\sendas}{DiccTrie(estacion, DiccTrie(estacion, bool)}%
       \tupItem{\\itEst}{it(colaPrio(rur))}%
     \end{Tupla}

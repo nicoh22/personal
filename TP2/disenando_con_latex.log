@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.8.24)  21 OCT 2014 17:08
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.7.16)  22 OCT 2014 19:03
 entering extended mode
  %&-line parsing enabled.
 **disenando_con_latex.tex
@@ -46,7 +46,8 @@ Package ifvtex Info: VTeX not detected.
 \Gm@odd@mp=\dimen105
 \Gm@even@mp=\dimen106
 \Gm@dimlist=\toks15
-)
+
+(/usr/share/texmf-texlive/tex/xelatex/xetexconfig/geometry.cfg))
 (/usr/share/texmf-texlive/tex/latex/base/inputenc.sty
 Package: inputenc 2008/03/30 v1.1d Input encoding file
 \inpenc@prehook=\toks16
@@ -299,85 +300,85 @@ File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 ) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 203--203
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 241--241
 []\T1/cmr/m/n/10 Rep($\OML/cmm/m/it/10 l$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10 ^^
 Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 208--208
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 246--246
 []\T1/cmr/m/n/10 Nodo($\OML/cmm/m/it/10 l$\T1/cmr/m/n/10 ,$\OML/cmm/m/it/10 i$\
 T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10 ^^Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 213--213
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 251--251
 []\T1/cmr/m/n/10 FinLst($\OML/cmm/m/it/10 l$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10
  ^^Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 218--218
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 256--256
 []\T1/cmr/m/n/10 Lst($\OML/cmm/m/it/10 p; n$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10
  ^^Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 222--222
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 260--260
 []\T1/cmr/m/n/10 Abs($\OML/cmm/m/it/10 l$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10 ^^
 Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 233--233
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 271--271
 []\T1/cmr/m/n/10 Rep($\OML/cmm/m/it/10 it$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10 ^
 ^Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 243--243
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 281--281
 []\T1/cmr/m/n/10 Sig($\OML/cmm/m/it/10 i; p$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10
  ^^Q$| [] 
  []
 
 
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 248--248
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 286--286
 []\T1/cmr/m/n/10 Ant($\OML/cmm/m/it/10 i; p$\T1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10
  ^^Q$| [] 
  []
 
-
-Overfull \hbox (14.99998pt too wide) in paragraph at lines 254--254
+[2]
+Overfull \hbox (14.99998pt too wide) in paragraph at lines 292--292
 []\T1/cmr/m/n/10 Pos($\OML/cmm/m/it/10 l$\T1/cmr/m/n/10 ,$\OML/cmm/m/it/10 p$\T
 1/cmr/m/n/10 )| $\OMS/cmsy/m/n/10 ^^Q$| [] 
  []
 
-[2] (./disenando_con_latex.aux) ) 
+[3] (./disenando_con_latex.aux) ) 
 Here is how much of TeX's memory you used:
- 3043 strings out of 494999
- 37218 string characters out of 1180816
- 105015 words of memory out of 3000000
- 6189 multiletter control sequences out of 15000+50000
+ 3047 strings out of 494999
+ 37401 string characters out of 1180816
+ 106028 words of memory out of 3000000
+ 6190 multiletter control sequences out of 15000+50000
  14736 words of font info for 43 fonts, out of 3000000 for 9000
  54 hyphenation exceptions out of 8191
  34i,9n,37p,280b,263s stack positions out of 5000i,500n,10000p,200000b,50000s
- </home/bisonterix/.texmf-var/fonts/pk/ljfour/
-jknappen/ec/ecrm0900.600pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknapp
-en/ec/ecti1000.600pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/
-ecbx1200.600pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/ectt10
-00.600pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/eccc1000.600
-pk> </home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1000.600pk> </
-home/bisonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1000.600pk> </home/b
-isonterix/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1440.600pk></usr/share/tex
-mf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/
-fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/share/texmf-texlive/fonts/type1/
-public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfo
-nts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.p
-fb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/shar
-e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on disenando_con_latex.pdf (2 pages, 139690 bytes).
+{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-
+super-t1.enc}</usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pf
+b></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/shar
+e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-texl
+ive/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texmf-texlive/fonts/typ
+e1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/fonts/type1/public/ams
+fonts/cm/cmr9.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy
+10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/t
+exmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/pub
+lic/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc100
+0.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0900.pfb></usr/share/te
+xmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/publ
+ic/cm-super/sfti1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000
+.pfb>
+Output written on disenando_con_latex.pdf (3 pages, 213676 bytes).
 PDF statistics:
- 267 PDF objects out of 1000 (max. 8388607)
+ 73 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
