@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.7.16)  22 OCT 2014 19:03
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.7.16)  22 OCT 2014 20:51
 entering extended mode
  %&-line parsing enabled.
 **disenando_con_latex.tex
@@ -355,10 +355,10 @@ Overfull \hbox (14.99998pt too wide) in paragraph at lines 292--292
 
 [3] (./disenando_con_latex.aux) ) 
 Here is how much of TeX's memory you used:
- 3047 strings out of 494999
- 37401 string characters out of 1180816
+ 3057 strings out of 494999
+ 37552 string characters out of 1180816
  106028 words of memory out of 3000000
- 6190 multiletter control sequences out of 15000+50000
+ 6200 multiletter control sequences out of 15000+50000
  14736 words of font info for 43 fonts, out of 3000000 for 9000
  54 hyphenation exceptions out of 8191
  34i,9n,37p,280b,263s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -376,7 +376,7 @@ lic/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfcc100
 xmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/publ
 ic/cm-super/sfti1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1000
 .pfb>
-Output written on disenando_con_latex.pdf (3 pages, 213676 bytes).
+Output written on disenando_con_latex.pdf (3 pages, 223930 bytes).
 PDF statistics:
  73 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

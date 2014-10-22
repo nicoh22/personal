@@ -21,6 +21,7 @@ void check_crear_mesa_vacia() {
   ASSERT_EQ(mesa.esVacia(), true);
 
   ASSERT_EQ(mesa.tamanio(), 0);
+  ASSERT_EQ(mesa.arturoPresente(), false);
 }
 
 
@@ -107,6 +108,7 @@ void check_arturo_de_arturo_avanz(){
 	Arturo<char> mesa3;
 	mesa2.sentarArturo(mesa1);
 	mesa2.incorporarCaballero(mesa3);
+	ASSERT_EQ(mesa2.tamanio(), 2);
 	
 	cout << "\n" << " Mesa0.1: " << mesa2 << "\n";
 	mesa1.sentarArturo('a');
@@ -117,9 +119,12 @@ void check_arturo_de_arturo_avanz(){
 	
 	mesa2.incorporarCaballero(mesa1);
 	cout << " Mesa1.0: " << mesa2 << "\n";
+	ASSERT_EQ(mesa2.tamanio(), 3);
+	
 	
 	mesa1.proximoCaballero();
 	mesa1.hablaArturo();
+	ASSERT_EQ(mesa1.caballeroActual(), 'a');
 	
 	mesa2.incorporarCaballero(mesa1);
 	cout << " Mesa2.0: " << mesa2 << "\n";
@@ -127,6 +132,7 @@ void check_arturo_de_arturo_avanz(){
 	cout << " Mesa2.5: " << mesa2 << "\n";
 	mesa2.expulsarCaballero(mesa1);
 	cout << " Mesa3.0: " << mesa2 << "\n";
+	
 	
 }
 

@@ -132,13 +132,14 @@
 
   \textbf{usa}: 
   
-  \Titulo{Operaciones básicas de lista}
+  \Titulo{Operaciones básicas de ciudad}
 
   \InterfazFuncion{Crear}{\In{m}{mapa}}{ciudad}%
   {$res \igobs$ crear($m$)}%
   [$\Theta(1)$]
   [genera una nueva Ciudad.]
-
+  [lo ideal seria no copiar ese mapa no?]
+  
   \InterfazFuncion{Entrar}{\In{ts}{conj(tag)}, \In{e}{estacion}, \Inout{c}{ciudad}}{}
   [$c \igobs c_0 \land e \in$ estaciones($c$)]
   {$c \igobs$ entrar($ts, e, c_0$)}
@@ -222,7 +223,7 @@
       \tupItem{presente?}{bool}%
       \tupItem{\\est}{estacion}%
       \tupItem{\\infr}{nat}%
-      \tupItem{\\tags}{conj(tags)}%
+      \tupItem{\\tags}{conjTrie(tags)}%
       \tupItem{\\sendas}{DiccTrie(estacion, DiccTrie(estacion, bool)}%
       \tupItem{\\itEst}{it(colaPrio(rur))}%
     \end{Tupla}
@@ -292,5 +293,66 @@
 
 
 \end{Representacion}
+
+\begin{Algoritmos}
+ 
+ 
+\end{Algoritmos}
+
+\section{Modulo Restriccion}
+
+\begin{Interfaz}
+
+  \textbf{se explica con}: \tadNombre{Restriccion}
+
+  \textbf{géneros}: \TipoVariable{restriccion}
+
+  \textbf{usa}: 
+
+
+  \InterfazFuncion{<\argumento>}{\In{t}{tag}}{restriccion}%
+  {$res \igobs$ <t>}%
+  [$\Theta(1)$]
+  [genera una restriccion de un solo tag.]
+
+  \InterfazFuncion{NOT \argumento}{\In{r}{restriccion}}{restriccion}% este capaz que es inout
+  {$res \igobs$ NOT $r$}%
+  [$\Theta(1)$]
+  [...]
+  [...]
+
+  \InterfazFuncion{\argumento AND \argumento}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}%
+  {$res \igobs$ $r1$ AND $r2$}%
+  [$\Theta(1)$]
+  [...]
+  [...]
+  
+  \InterfazFuncion{\argumento OR \argumento}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}%
+  {$res \igobs$ $r1$ OR $r2$}%
+  [$\Theta(1)$]
+  [...]
+  [...]
+  
+  \InterfazFuncion{Verifica?}{\In{ts}{conj(tag)}, \In{r}{restriccion}}{bool}%
+  {$res \igobs$ verifica?(ts, r)}%
+  [$O(R)$]
+  [...]
+  [...]  
+  
+  
+\end{Interfaz}
+
+\begin{Representacion}
+ \Titulo{Representacion de la restriccion}
+ 
+ \begin{Estructura}{restriccion}[rtr]
+  \begin{Tupla}[rtr]
+   \tupItem{}{}
+  \end{Tupla}
+
+ \end{Estructura}
+
+\end{Representacion}
+
 
 \end{document}

@@ -314,13 +314,17 @@ Arturo<T>::Arturo(const Arturo<T>& a):len(0), rey(NULL), orador(NULL), interrupc
 template <typename T>
 void Arturo<T>::proximoCaballero(){
 	interrupcion = false;
-	orador = orador->sig;
+	if (tamanio() != 1){
+		orador = orador->sig;
+	}
 }
 
 template <typename T>
 void Arturo<T>::caballeroAnterior(){
 	interrupcion = false;
-	orador = orador->ant;
+	if (tamanio() != 1){
+		orador = orador->ant;
+	}
 }
 
 template <typename T>
@@ -420,11 +424,10 @@ ostream& Arturo<T>::mostrarArturo(ostream& os) const{
 			os << "]";
 			}
 			
+			
 			actual = actual->sig;
 			n++;
 		}
-//		char c = 8;
-//		os<< c << c <<"]";
 	}
 	return os;
 }
