@@ -214,11 +214,17 @@
 
   \begin{Estructura}{ciudad}[str]
     \begin{Tupla}[str]
-      \tupItem{robRUR}{DiccArreglo(rur, datosRobot)}%
+      \tupItem{robRUR}{DiccArreglo(rur, puntero(datosRobot))}%
       \tupItem{\\robEstacion}{DiccTrie(estacion, colaPrio(rur))}%
-      \tupItem{\\mapa}{DiccTrie(estacion, DiccTrie(estacion, Restriccion)}%
+      \tupItem{\\mapa}{vector(senda)}%
     \end{Tupla}
 
+    \begin{Tupla}[senda]
+	 \tupItem{est1}{estacion}
+	 \tupItem{est2}{estacion}
+	 \tupItem{restr}{restriccion}   
+    \end{Tupla}
+    
     \begin{Tupla}[datosRobot]
       \tupItem{presente?}{bool}%
       \tupItem{\\est}{estacion}%
@@ -295,6 +301,308 @@
  
 \end{Algoritmos}
 
+\section{Modulo Cola de Prioridad}
+
+\begin{Interfaz}
+  \textbf{se explica con}: \tadNombre{Cola de prioridad($\alpha$)}
+
+  \textbf{géneros}: \TipoVariable{colaPrio($\alpha$)}
+
+  \textbf{usa}: 
+
+  \InterfazFuncion{Vacia}{}{colaPrio($\alpha$)}%
+  {$res \igobs$ vacia}%
+  [$\Theta(1)$]
+  [genera una cola vacia.]
+  
+  \InterfazFuncion{Encolar}{\In{a}{$\alpha$}, \In{n}{nat},\Inout{c}{colaPrio($\alpha$)}}{}%
+  [$c \igobs c_0$]
+  {$res \igobs$ encolar(a, c)}%
+  [$\Theta(1)$]
+  [agrega a la cola el elemento $a$]
+  [$a$ se agrega por copia]
+  
+    
+  \InterfazFuncion{Vacia?}{\In{c}{colaPrio($\alpha$)}}{bool}%
+  {$res \igobs$ vacia?(c)}%
+  [$\Theta(1)$]
+  [checkea si la cola esta vacia]
+  
+  \InterfazFuncion{Desencolar}{\Inout{c}{colaPrio($\alpha$)}}{$\alpha$}%
+  [$c \igobs c_0 \land \neg$ vacia?($c_0$)]%
+  {}
+  [$O(log n)$]
+  [elimina el proximo de la cola y retorna el elemento]
+  []  
+  
+    \Titulo{Operaciones del iterador}
+El iterador es necesario para eliminar en el mover
+  
+\end{Interfaz}
+
+\begin{Representacion}
+\Titulo{Representacion de la cola}
+\begin{Estructura}{colaPrio($\alpha$)}[c]
+  \begin{Tupla}[c]
+   \tupItem{raiz}{puntero(Nodo)}
+   \tupItem{padreUlt}{puntero(Nodo)}
+   \tupItem{cant}{nat}
+  \end{Tupla}
+  
+  \begin{Tupla}[Nodo]
+   \tupItem{prioridad}{nat}
+   \tupItem{\\elem}{$\alpha$}   
+   \tupItem{\\padre}{puntero(Nodo)}
+   \tupItem{\\izq}{puntero(Nodo)}
+   \tupItem{\\der}{puntero(Nodo)}
+  \end{Tupla}
+
+
+\end{Estructura}
+
+\end{Representacion}
+\begin{Algoritmos}\\
+\TipoFuncion{iVacia}{}{colaPrio($\alpha$)}\\
+\indent res.raiz $\leftarrow$ NULL\\
+\indent res.cant $\leftarrow$ 0\\
+\indent res.padreUlt $\leftarrow$ NULL\\
+\\
+\TipoFuncion{iEncolar}{\Inout{c}{colaPrio($\alpha$)}, \In{a}{$\alpha$}, \In{n}{nat}}{}\\
+\indent c.cant++ \\
+\indent var n $\leftarrow$ New Nodo\\
+\indent n.prioridad $\leftarrow$ n\\
+\indent n.elem $\leftarrow$ a\\
+\indent if c.raiz = NULL \{ c.raiz $\leftarrow$ \& n\} \\
+\indent else \{\\ 
+\indent \indent if c.padreUlt $==$ NULL\{\\
+\indent \indent c.padreUlt $\leftarrow$ c.raiz\\ 
+\indent \indent n.padre $\leftarrow$ c.raiz\\
+\indent \indent c.raiz$\rightarrow$izq $\leftarrow$ \& n \\
+\indent \indent \} else \{\\
+\indent \indent \indent if c.padreUlt$\rightarrow$der $==$ NULL\{\\
+\indent \indent \indent \indent n.padre $\leftarrow$ c.padreUlt\\
+\indent \indent \indent \indent c.padreUlt$\rightarrow$der $\leftarrow$ \& n\\
+\indent \indent \indent \}else\{ \\
+\indent \indent \indent \indent if $log_2(cant) == int(log_2(cant))$ \{\\
+\indent \indent \indent \indent \indent c.padreUlt $\leftarrow$ busqIzq(c)\\
+\indent \indent \indent \indent \indent n.padre $\leftarrow$ c.padreUlt\\
+\indent \indent \indent \indent \indent c.padreUlt$\rightarrow$izq $\leftarrow$ \& n\\
+\indent \indent \indent \indent \}else\{\\
+\indent \indent \indent \indent \indent c.padreUlt $\leftarrow$ busqTransversal(c.padreUlt, c)\\
+\indent \indent \indent \indent \indent n.padre $\leftarrow$ c.padreUlt\\
+\indent \indent \indent \indent \indent c.padreUlt$\rightarrow$izq $\leftarrow$ \& n\\
+\indent \indent \indent \indent \}\\
+\indent \indent \indent \}\\
+\indent \indent \}\\
+\indent \}\\
+\indent var parent$\leftarrow$ n.padre\\
+\indent var aux\\
+\indent while(parent != NULL $\land$ n.prioridad > parent$\rightarrow$prioridad)\{\\
+\indent \indent if parent$\rightarrow$der == n\{\\
+\indent \indent \indent n.padre $\leftarrow$ parent$\rightarrow$padre\\
+\indent \indent \indent aux $\leftarrow$ parent$\rightarrow$izq\\
+\indent \indent \indent parent$\rightarrow$der $\leftarrow$ n.der\\
+\indent \indent \indent parent$\rightarrow$izq $\leftarrow$ n.izq\\
+\indent \indent \indent n.der $\leftarrow$ parent\\
+\indent \indent \indent n.izq $\leftarrow$ aux\\
+\indent \indent \indent parent$\rightarrow$padre $\leftarrow$ \& n\\
+\indent \indent \} else \{\\
+\indent \indent \indent n.padre $\leftarrow$ parent$\rightarrow$padre\\
+\indent \indent \indent aux $\leftarrow$ parent$\rightarrow$der\\
+\indent \indent \indent parent$\rightarrow$der $\leftarrow$ n.der\\
+\indent \indent \indent parent$\rightarrow$izq $\leftarrow$ n.izq\\
+\indent \indent \indent n.izq $\leftarrow$ parent\\
+\indent \indent \indent n.der $\leftarrow$ aux\\
+\indent \indent \indent parent$\rightarrow$padre $\leftarrow$ \& n\\
+\indent \indent \}\\
+\indent \}\\
+\indent res $\leftarrow$ crearIt(\& n)\\
+\\
+\TipoFuncion{ibusqIzq}{\In{c}{colaPrio($\alpha$)}}{Nodo}\\
+\indent var actual $\leftarrow$ c.raiz\\
+\indent while(actual$\rightarrow$izq != NULL)\{\\
+\indent \indent actual $\leftarrow$ actual$\rightarrow$izq\\
+\indent \}\\
+\indent res $\leftarrow$ actual\\
+\\
+\TipoFuncion{ibusqTransversal}{\In{c}{colaPrio($\alpha$)}, \In{n}{Nodo}}{Nodo}\\
+\indent var parent $\leftarrow$ n.padre\\
+\indent var act $\leftarrow$ n\\
+\indent while(parent$\rightarrow$der == act)\{\\
+\indent \indent act $\leftarrow$ parent\\
+\indent \indent parent $\leftarrow$ parent$\rightarrow$padre\\
+\indent \}\\
+\indent act $\leftarrow$ parent$\rightarrow$der\\
+\indent while(act$\rightarrow$izq =! NULL)\{\\
+\indent \indent act $\leftarrow$ act$\rightarrow$izq\\
+\indent \}\\
+\indent res $\leftarrow$ act\\
+\\
+\TipoFuncion{iVacia?}{\In{c}{colaPrio($\alpha$)}}{bool}\\
+\indent res $\leftarrow$ c.cant $==$ 0\\
+\\
+\TipoFuncion{iDesencolar}{\Inout{c}{colaPrio($\alpha$)}}{}\\
+\indent var ult\\
+\indent if c.padreUlt$\rightarrow$der != NULL \{\\
+\indent \indent ult $\leftarrow$ c.padreUlt$\rightarrow$der\\
+\indent \indent c.padreUlt$\rightarrow$der $\leftarrow$ NULL\\
+\indent \}else \{\\
+\indent \indent ult $\leftarrow$ c.padreUlt$\rightarrow$izq\\
+\indent \indent c.padreUlt$\rightarrow$izq $\leftarrow$ NULL\\
+\indent \}\\
+\indent ult$\rightarrow$padre $\leftarrow$ NULL\\
+\indent ult$\rightarrow$izq $\leftarrow$ c.raiz$\rightarrow$izq\\
+\indent ult$\rightarrow$der $\leftarrow$ c.raiz$\rightarrow$der\\
+\indent ult$\rightarrow$der$\rightarrow$padre $\leftarrow$ ult\\
+\indent ult$\rightarrow$izq$\rightarrow$padre $\leftarrow$ ult\\
+\indent delete c.raiz\\
+\indent c.raiz $\leftarrow$ ult\\
+\indent bajar
+
+\end{Algoritmos}
+
+\section{Modulo DiccArreglo(nat, significado)}
+
+\begin{Interfaz}
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} nat, significado\\
+  
+  \textbf{se explica con}: \tadNombre{dicc($clave, significado$)}, \tadNombre{Iterador Unidireccional($\alpha$)}.\\
+  \indent\textbf{géneros}: \TipoVariable{DiccArreglo(nat, significado)}, \TipoVariable{itDicc(nat)}.
+
+  \Titulo{Operaciones básicas del diccionario arreglo}
+  
+  \InterfazFuncion{Vacio}{}{DiccArreglo(nat, significado)}%
+  {$res \igobs$ vacio()}%
+  [$\Theta(1)$]
+  [genera un nuevo diccionario arreglo.]
+  
+  \InterfazFuncion{Definir}{\Inout{DA}{DiccArreglo(nat, significado)}, \In{s}{significado}}{}%
+  [$DA_0 \igobs DA$]
+  {$DA \igobs$ definir($\#claves(DA_0) + e$, s, $DA_0$)}%
+  [$\Theta(n)$]
+  [Define una nueva clave con su significado. Donde e es la cantidad de elementos eliminados del diccionario 	historicamente\\
+   n es la cantidad de elementos en el diccionario en el estado anterior a Definir.] 
+
+  \InterfazFuncion{Def?}{\In{a}{nat}, \In{DA}{DiccArreglo(nat, significado)}}{bool}%
+  {$res \igobs$ def?(a, DA)}%
+  [$\Theta(1)$]
+  [Devuelve $True$ si el la clave está definida.]
+
+  \InterfazFuncion{Obtener}{\In{a}{nat}, \In{DA}{DiccArreglo(nat, significado)}}{significado}%
+  [Def?(a, DA)]  
+  {$res \igobs$ obtener(a, DA)}%
+  [$\Theta(1)$]
+  [Devuelve el significado de la clave a.]
+  
+  \InterfazFuncion{Borrar}{\In{a}{nat}, \Inout{DA}{DiccArreglo(nat, significado)}}{}%
+  [Def?(a, DA) $\land$ $DA_0 \igobs DA$]  
+  {$DA \igobs$ borrar(a, $DA_0$)}%
+  [$\Theta(1)$]
+  [Borra el significado y su clave a.]
+  
+  \InterfazFuncion{Claves}{\Inout{DA}{DiccArreglo(nat, significado)}}{itDicc(nat)}%  
+  {$res \igobs$ CrearItUni(convertir(claves($DA$)))}%
+  [$\Theta(1)$]
+  [Devuelve el conjunto de claves del diccionario.]
+  
+  \Titulo{Operaciones básicas del iterador}
+  
+  \InterfazFuncion{CrearIt}{\In{DA}{DiccArreglo(nat, significado)}}{itDicc(nat)}%  
+  {$res$ $\leftarrow$ CrearItUni(convertir(claves($DA$)))}%
+  [$\Theta(1)$]
+  [Crea un iterador unidireccional del conjunto de claves \\
+  de forma tal que siguiente devuelva la siguiente clave del diccionario.]
+    
+  \InterfazFuncion{Avanzar}{\Inout{it}{itDicc(nat)}}{}%  
+  [$it = it_0$ $\land$ haySiguiente?(it)]
+  {$it \igobs$ avanzar($it_0$)}%
+  [$\Theta(1)$]
+  [Avanza a la posición siguiente del iterador.]  
+  
+  \InterfazFuncion{Siguiente}{\In{it}{itDicc(nat)}}{nat}%  
+  [haySiguiente?(it)]
+  {$res \igobs$ siguiente($it$)}%
+  [$\Theta(1)$]
+  [devuelve el elemento siguiente a la posición del iterador.] 
+  [res no es modificable.]  
+  
+  \InterfazFuncion{HaySiguiente?}{\In{it}{itDicc(nat)}}{bool}%  
+  {$res \igobs$ haySiguiente($it$)}%
+  [$\Theta(1)$]
+  [devuelve $true$ si y solo si en el iterador quedan elementos para avanzar.] 
+  [res no es modificable.]  
+    
+\end{Interfaz}
+
+\begin{Representacion}
+
+\Titulo{Representación del diccionario arreglo}
+El objetivo de este modulo es implementar un arreglo de elementos que son una tupla con un significado y un booleano.
+La idea es que si el booleano vale True significa que el elemento está borrado. 
+
+ \begin{Estructura}{DiccArreglo(nat, significado)}[vec : vector(valor)]
+  \begin{Tupla}[valor]
+   \tupItem{sig}{significado}
+   \tupItem{esta?}{bool}
+  \end{Tupla}
+ \end{Estructura}
+
+  \Rep[vec][v]{true}\mbox{}\
+
+  \AbsFc[vector(valor)]{dicc(nat, significado)}[vec]{\IF Longitud($vec$) $=$ $0$ THEN vacio ELSE 
+  \textbf{if} $vec$[Longitud($vec$) $-$ 1].esta? = $true$ \textbf{then}\\ definir(Longitud($vec$) $-$ 1, $vec$[Longitud($vec$) $-$ 1].significado, AbsFc(Comienzo($vec$))) \\\textbf{else} \\
+   AbsFc(Comienzo($vec$)) \\\textbf{fi} FI} 
+
+
+\Titulo{Representación del iterador}
+Este iterador recorre las claves que son los naturales en el rango del vector. Para esto mantiene una variable\\
+actualizada con la posición siguiente. Este iterador se indefine cada vez que el vector se redefine. En ese caso debera crearse un nuevo iterador.
+
+ \begin{Estructura}{itDicc(nat)}[itTupla]
+  \begin{Tupla}[itTupla]
+   \tupItem{posicion}{nat}
+   \tupItem{pVec}{puntero(vector(valor))}   
+  \end{Tupla}
+ \end{Estructura}
+
+
+ \Rep[itTupla][it]{$\neg$($it$.pVec  $=$  NULL) $\yluego$ \\ 
+ ($it$.posicion $<$ Longitud(*($i$.pVec)) \&\& 0 $\leq$ $it$.posicion) $\yluego$ \\ 
+ (*($it$.pVec)[$it$.posicion].esta? = true) 
+ }\mbox{} \\
+
+  \Abs[itTupla]{itUni(nat)}[it]{iu}{Siguientes($iu$) $=$ convertir(claves(Abs(*($it$.pVec)))) $\land$\\ 	
+  Siguiente($iu$) $=$ $it$.posición}
+
+\end{Representacion}
+
+\begin{Algoritmos}
+
+  \TipoFuncion{iVacio}{}{vector(valor)} \\
+  \indent\indent res $\leftarrow$ Vacía();\\
+  
+  \TipoFuncion{iDefinir}{\Inout{vec}{vector(valor)}, \In{s}{significado}}{} \\
+  \indent\indent\indent\indent res  $\leftarrow$ AgregarAtras(vec, s);\\
+  
+  \TipoFuncion{iDef?}{\In{a}{nat}, \Inout{vec}{vector(valor)}}{bool} \\
+  \indent\indent res $\leftarrow$ false; \\ 
+  \indent\indent if a $<$ Longitud(vec) \&\& a $>$ 0 \{ \\
+  \indent\indent\indent\indent if vec[a].esta? true \{ \\ 
+  \indent\indent\indent\indent\indent\indent res $\leftarrow$ true; \\
+  \indent\indent\indent\indent \} \\ 
+  \indent\indent\} \\
+
+  \TipoFuncion{iObtener}{\In{a}{nat}, \Inout{vec}{vector(valor)}}{valor} \\
+  \indent\indent res $\leftarrow$ vec[a].significado; \\
+
+  \TipoFuncion{iBorrar}{\In{a}{nat}, \Inout{vec}{vector(valor)}}{} \\
+  \indent\indent vec[a].esta? $\leftarrow$ false; \\ 
+  
+  \TipoFuncion{iClaves}{\Inout{vec}{vector(valor)}}{itDicc(nat)} \\
+  \indent\indent res $\leftarrow$ iCrearIt(vec);
+  
+\end{Algoritmos}
 \section{Modulo Restriccion}
 
 \begin{Interfaz}
@@ -306,24 +614,24 @@
   \textbf{usa}: 
 
 
-  \InterfazFuncion{< \argumento >}{\In{t}{tag}}{restriccion}%
+  \InterfazFuncion{NuevoTag}{\In{t}{tag}}{restriccion}%
   {$res \igobs$ <t>}%
   [$\Theta(1)$]
   [genera una restriccion de un solo tag.]
 
-  \InterfazFuncion{NOT \argumento}{\In{r}{restriccion}}{restriccion}% este capaz que es inout
+  \InterfazFuncion{Not}{\Inout{r}{restriccion}}{}% este capaz que es inout
   {$res \igobs$ NOT $r$}%
   [$\Theta(1)$]
   [...]
   [...]
 
-  \InterfazFuncion{\argumento AND \argumento}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}%
+  \InterfazFuncion{And}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}%
   {$res \igobs$ $r1$ AND $r2$}%
   [$\Theta(1)$]
   [...]
   [...]
-  iInaugurarWolfie
-  \InterfazFuncion{\argumento OR \argumento}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}%
+
+  \InterfazFuncion{Or}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}%
   {$res \igobs$ $r1$ OR $r2$}%
   [$\Theta(1)$]
   [...]
@@ -357,18 +665,25 @@
   \indent donde log es enum\{AND, OR, CAR\}
  \end{Estructura}
 
-\Rep[rtr][r]{noCiclos(r.raiz, $\emptyset$) \yluego esRestriccion?(r.raiz)}
+\Rep[rtr][r]{completo?(r.raiz) \yluego noCiclos(r.raiz, $\emptyset$) \yluego esRestriccion?(r.raiz)}
 
-\TipoFuncion{esRestriccion?}{\In{n}{Nodo}}{bool}\\
-\indent if n.tipo \igobs CAR \\
-\indent \indent then n.izq \igobs NULL $\land$ n.der \igobs NULL\\
-\indent \indent else n.izq $\neq$ NULL $\land$ n.der $\neq$ NULL \yluego \\
-\indent \indent \indent esRestriccion?(n.izq) $\land$ esRestriccion?(n.der)\\
-\indent end if\\
+\tadOperacion{completo?}{Nodo/n}{bool}{}
+\tadAxioma{completo?(n)}{(n.izq \igobs NULL $\land$ n.der \igobs NULL) $\lor$\\
+$\neg$(n.izq \igobs NULL) $\land$ $\neg$ (n.der \igobs NULL) $\land$\\
+completo?(n.izq) $\land$ completo?(n.der)}
+
+\tadOperacion{esRestriccion?}{Nodo/n}{bool}{}
+\tadAxioma{esRestriccion?(n)}{if n.tipo \igobs CAR \\ 
+then n.izq \igobs NULL $\land$ n.der \igobs NULL\\
+else n.izq $\neq$ NULL $\land$ n.der $\neq$ NULL \yluego \\
+esRestriccion?(n.izq) $\land$ esRestriccion?(n.der)\\ end if}
+
+\Abs[rtr]{restriccion}[r]{rest}{($\forall$ ts : conj(tag)) verifica?(ts, rest) $=$ Verifica?(ts, r)}
+
 \end{Representacion}
 
 \begin{Algoritmos}\\
-\TipoFuncion{< \argumento >}{\In{t}{tag}}{restriccion}\\ 
+\TipoFuncion{iNuevoTag}{\In{t}{tag}}{restriccion}\\ 
  \indent puntero(Nodo) n $\leftarrow$ New Nodo\\
  \indent n.tag $\leftarrow$ t\\
  \indent n.tipo $\leftarrow$ CAR\\
@@ -377,10 +692,10 @@
  \indent n.der $\leftarrow$ NULL\\
  \indent res.raiz $\leftarrow$ n\\
 \\
-\TipoFuncion{NOT \argumento }{\Inout{r1}{restriccion}}{}\\  
+\TipoFuncion{iNot}{\Inout{r1}{restriccion}}{}\\  
 \indent r1.negado? $\leftarrow$ true\\
 \\
-\TipoFuncion{\argumento AND \argumento }{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}\\
+\TipoFuncion{iAnd}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}\\
  \indent puntero(Nodo) n $\leftarrow$ New Nodo\\
  \indent n.tipo $\leftarrow$ AND\\
  \indent n.negado $\leftarrow$ false\\
@@ -388,7 +703,7 @@
  \indent n.der $\leftarrow$ r2.raiz\\
  \indent res.raiz $\leftarrow$ n\\
 \\ 
-\TipoFuncion{\argumento OR \argumento }{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}\\
+\TipoFuncion{iOr}{\In{r1}{restriccion}, \In{r2}{restriccion}}{restriccion}\\
  \indent puntero(Nodo) n $\leftarrow$ New Nodo\\
  \indent n.tipo $\leftarrow$ OR\\
  \indent n.negado $\leftarrow$ false\\
@@ -396,11 +711,11 @@
  \indent n.der $\leftarrow$ r2.raiz\\
  \indent res.raiz $\leftarrow$ n\\
 \\
-\TipoFuncion{verifica}{\In{r}{restriccion}, \In{ts}{tags}}{bool}\\
+\TipoFuncion{iVerifica? }{\In{r}{restriccion}, \In{ts}{tags}}{bool}\\
 \indent res $\leftarrow$ verificaAux(r.raiz, ts)
 \\
 \\
-\TipoFuncion{verificaAux}{\In{n}{Nodo}, \In{ts}{tags}}{bool}\\
+\TipoFuncion{iverificaAux}{\In{n}{Nodo}, \In{ts}{tags}}{bool}\\
 \indent bool aux $\leftarrow$ false\\
 \indent if n.tipo = CAR \\
 \indent \indent then aux $\leftarrow$ pertenece?(n.tag, ts)\\
@@ -409,6 +724,141 @@
 \indent \indent \indent else aux $\leftarrow$ verificaAux(n.izq, ts) $\lor$ verificaAux(n.der, ts)\\
 \indent if n.negado? then res $\leftarrow$ $\neg$ aux\\
 \indent \indent else res $\leftarrow$ aux\\
+
+\end{Algoritmos}
+
+\newpage
+
+\section{Módulo Diccionario($\sigma$)}
+
+\begin{Interfaz}
+  
+  \textbf{parámetros formales}\hangindent=2\parindent\\
+  \parbox{1.7cm}{\textbf{géneros}} $\sigma$\\
+  % notar que ya existe el tad diccionario, este es otro. por ahora lo dejo asi, pero lo mejor seria darle un renombre.
+  \textbf{se explica con}: \tadNombre{Diccionario($\sigma$)}.
+
+  \textbf{géneros}: \TipoVariable{dicc($\sigma$)}.
+
+  \Titulo{Operaciones básicas de diccionario}
+
+  \InterfazFuncion{Vacío}{}{dicc($\sigma$)}
+  {$res \igobs vacio$}
+  [$\Theta(1)$]
+  [genera un diccionario vacío.]
+
+  \InterfazFuncion{Definir}{\Inout{d}{dicc($\sigma$)}, \In{k}{string}, \In{s}{$\sigma$}}{}
+  [$d \igobs d_0$]
+  {$d = definir(d, k, s)$}
+  [$\Theta(long(k))$]
+  [define la clave $k$ con el significado s en el diccionario.]
+  [la clave se define por copia, pero el significado se define por referencia.]
+
+  \InterfazFuncion{Definido?}{\In{d}{dicc($\sigma$)}, \In{k}{string}}{bool}
+  [long(k) $>$ 0]
+  {$res \igobs def?(d,k)$}
+  [$\Theta(long(k))$]
+  [devuelve true si k esta definido en el diccionario.]
+
+  \InterfazFuncion{Significado}{\In{d}{dicc($\sigma$)}, \In{k}{string}}{$\sigma$}
+  [$def?(d,k)$]
+  {$res \igobs obtener(k,d)$}
+  [$\Theta(long(k))$]
+  [devuelve la referencia al significado de la clave k en d.]
+
+\end{Interfaz}
+
+\begin{Representacion}
+  
+  \Titulo{Representación del diccionario}
+
+  \begin{Estructura}{dicc$(\sigma)$}[puntero(nodo)]
+    \begin{Tupla}[nodo]
+      \tupItem{caracteres}{ad(puntero(nodo))}%
+      \tupItem{significado}{puntero($\sigma$)}%
+    \end{Tupla}
+
+  \end{Estructura}
+
+  \RepFc[estr][d]{tam(d\DRef caracteres) = 256 $\yluego$ \\ ($\forall i$: nat) (n $\in$ [1..256] $\land$ d\DRef caracteres[n-1] $\neq$ NULL) $\impluego$ Rep(d\DRef caracteres[n-1])}\mbox{}
+
+  \Abs[estr]{dicc($\sigma$)}[d]{dic}{
+  ($\forall s$: string) def?(dic, s) = estaDefinido?(s, d) $\land$ \\ (def?(dic, s) \impluego ($\forall k$: string) obtener(k, dic) = dameSignificado(s, d))
+  }
+
+  ~
+
+  \tadOperacion{dameSignificado}{string/s, puntero(nodo)/d}{bool}{}
+  \tadAxioma{dameSignificado(s, d)}{
+  
+  \LIF{ d = NULL } \LTHEN{ NULL} \LELSE{ \\
+    \LIF{ long(s) = 0} \LTHEN{ d\DRef significado }\\
+    \LELSE{ dameSignificado(fin(s), d\DRef caracteres[ord(prim(s))-1])} \LFI
+     } \\ \LFI
+  }
+
+  \tadOperacion{estaDefinido?}{string/s, puntero(nodo)/p}{bool}{}
+  \tadAxioma{estaDefinido?(s, p)}{dameSignificado(s, p) $\neq$ NULL}
+
+\end{Representacion}
+
+\newpage
+
+\begin{Algoritmos}
+
+\TipoFuncion{iVacio}{}{dicc($\sigma$)} \\
+\indent res $\leftarrow$ <caracteres: arreglo[256] de puntero(nodo), significado: puntero($\sigma$)>
+
+~
+
+\TipoFuncion{nuevoNodo}{}{nodo} \\
+\indent res $\leftarrow$ <ad(puntero(nodo)), puntero($\sigma$)> 
+%\indent $tupla.campo_1$ = arreglo[256] de puntero(nodo) \\
+%\indent $tupla.campo_2$ = new $\sigma$ 
+
+~
+
+\TipoFuncion{iDefinir}{\Inout{d}{dicc($\sigma$)}, \In{k}{string}, \In{s}{$\sigma$}}{} \\
+\indent var nodoActual $\leftarrow$ d \\
+\indent var i $\leftarrow$ 0 \\
+\indent while i $<$ long(k) \{ \\
+\indent \indent if *nodoActual.campo$_1$[ord(k[i])] == NULL \\
+\indent \indent \indent *nodoActual.campo$_1$[ord(k[i])] $\leftarrow$ nuevoNodo() \\
+\indent \indent \} \\
+\indent \indent nodoActual $\leftarrow$ *nodoActual.campo$_1$[ord(k[i])] \\
+\indent \indent i++ \\
+\indent \} \\
+\indent *nodoActual.campo$_2$ $\leftarrow$ \&s
+
+~
+
+\TipoFuncion{iDefinido?}{\In{d}{dicc($\sigma$)}, \In{k}{string}}{bool} \\
+\indent var nodoActual $\leftarrow$ d \\
+\indent var i $\leftarrow$ 0 \\
+\indent var seguirBuscando $\leftarrow$ true \\
+\indent while i $<$ long(k) \&\& seguirBuscando \{ \\
+\indent \indent if *nodoActual.campo$_1$[ord(k[i])] == NULL \{ \\
+\indent \indent \indent seguirBuscando $\leftarrow$ false \\
+\indent \indent \} else \{ \\
+\indent \indent \indent nodoActual $\leftarrow$ *nodoActual.campo$_1$[ord(k[i])] \\
+\indent \indent \indent i++ \\
+\indent \indent \} \\
+\indent \} \\
+\indent res $\leftarrow$ false \\
+\indent if i == long(k)  \{ \\
+\indent \indent  res $\leftarrow$ (*nodoActual.campo$_2$[ord(k[i])] $\neq$ NULL) \\
+\indent \} \\
+
+~
+
+\TipoFuncion{iSignificado}{\In{d}{dicc($\sigma$)}, \In{k}{string}}{$\sigma$} \\
+\indent var nodoActual $\leftarrow$ d \\
+\indent var i $\leftarrow$ 0 \\
+\indent while i $<$ long(k) \{ \\
+\indent \indent nodoActual $\leftarrow$ *nodoActual.campo$_1$[ord(k[i])] \\
+\indent \indent i++ \\
+\indent \} \\
+\indent res $\leftarrow$ *nodoActual.campo$_2$
 
 \end{Algoritmos}
 
