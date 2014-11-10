@@ -1,0 +1,57 @@
+
+
+
+Rojinegro ab
+
+	snd(RojinegroPiola(ab): -> Nat, bool)
+
+ti = rojiNegroPiola(ab.der)
+td = rojinegroPiola(ab.izq)
+
+n = fst(ti);
+
+if negro?(ab) n = n+1
+	res = soyHoja(ab) ? True : False;
+else
+	res = soyHoja(ab) ? False : negro?(ab.izq) ^ negro?(ab.der)
+
+res = res ^ fst(ti) == fst(td) ^ snd(ti) ^ snd(td)
+
+
+
+return (n, res)
+ artista-> disco -> tema
+ 
+ |artista| < 40  (comparacion toma O(1) )
+ pos (disco, tema) = 26 (comparacion (|s|), posible counting sort? ordenado en trie? )
+ 
+ O(N. log(cant(artista)). |disco|. |tema|)
+ 
+ ¿trie? es posible gracias a la cota de caracteres0 posibles
+ Un trie no tiene orden no lo quiero
+ 
+ No se cantidad de bandas discos no puedo separar en arreglos diferentes
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ cancion es tupla (art, dis, tem)
+ 
+ SORT arreglo A(cancion)
+ res = Arreglo[long(A)]
+ n=0
+ RadixSortPorTema(A)	Usa BucketSort (O(n|t|))
+ RadixSortPorDisco(A)	Usa BucketSort (O(n|d|))
+ ArmarListaArtistas(A)	O(b) E o(n)
+ No se me rindo
+  
+  
+aloha disco k
+çasco muito bonito wadsddawsdaw
+wwww~ ching chong arre
+
+  
+   
