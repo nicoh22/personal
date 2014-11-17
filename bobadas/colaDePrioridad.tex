@@ -1,0 +1,423 @@
+\section{Modulo Cola de Prioridad}
+
+\begin{Interfaz}
+  \textbf{se explica con}: \tadNombre{Cola de prioridad($\alpha$)}, \tadNombre{itMod($\alpha$)}
+
+  \textbf{géneros}: \TipoVariable{colaPrio($\alpha$)}, \TipoVariable{itCola($\alpha$)}
+
+  \textbf{usa}: \TipoVariable{bool}, \TipoVariable{$\alpha$}, \TipoVariable{puntero($\alpha$)}, \TipoVariable{nat}
+	
+	\textbf{parámetros formales}\hangindent=2\parindent\\
+ \parbox{1.7cm}{\textbf{géneros}} $\alpha$\\
+  \InterfazFuncion{$\bullet$ < $\bullet$}{\In{a1}{$\alpha$}, \In{a2}{$\alpha$}}{bool}%
+  {a1 < a2}
+  [$\bigO(1)$]
+  [Funcion de comparacion del tipo parametrico.]
+
+  \InterfazFuncion{Vacia}{}{colaPrio($\alpha$)}%
+  {$res \igobs$ vacia}%
+  [$\bigO(1)$]
+  [genera una cola vacia.]
+  
+  \InterfazFuncion{Encolar}{\In{a}{$\alpha$}, \Inout{c}{colaPrio($\alpha$)}}{itCola($\alpha$)}%
+  [$c \igobs c_0$]
+  {$c \igobs$ encolar(a, $c_0$) $\land res \igobs CrearItMod(<>,a \bullet <>)$ )}%
+  [$\bigO(log(n))$]
+  [agrega a la cola el elemento $a$.]
+  []
+    
+  \InterfazFuncion{Vacia?}{\In{c}{colaPrio($\alpha$)}}{bool}%
+  {$res \igobs$ vacia?(c)}%
+  [$\bigO(1)$]
+  [checkea si la cola esta vacia.]
+  
+  \InterfazFuncion{Desencolar}{\Inout{c}{colaPrio($\alpha$)}}{$\alpha$}%
+  [$c \igobs c_0 \land \neg$ vacia?($c_0$)]%
+  {$res$ \igobs proximo($c_0$) $\land$ c \igobs desencolar($c_0$)}
+  [$\bigO(log(n))$]
+  [elimina el proximo de la cola y retorna el elemento.] 
+  
+\titlex{Operaciones del iterador}
+
+  \InterfazFuncion{Siguiente}{\In{it}{itCola(nat)}}{puntero($\alpha$)}%  
+  [haySiguiente?(it)]
+  {$res \igobs$ siguiente($it$)}%
+  [$\bigO(1)$]
+  [devuelve el elemento siguiente a la posición del iterador.] 
+  [res no es modificable.]  
+
+  \InterfazFuncion{ElimSig}{\Inout{it}{itCola(nat)}}{}%  
+  [haySiguiente?(it)]
+  {$it \igobs$ Eliminar($it$)}%
+  [$\bigO( log(n) )$]
+  [Elimina el elemento siguiente de la cola que esta siendo iterada.] 
+  []  
+  
+\end{Interfaz}
+
+\pagebreak
+
+\begin{Representacion}
+\titlex{Representacion de la cola}
+\begin{Estructura}{colaPrio($\alpha$)}[c]
+  \begin{Tupla}[c]
+   \tupItem{raiz}{puntero(Nodo)}
+   \tupItem{padreUlt}{puntero(Nodo)}
+   \tupItem{cant}{nat}
+  \end{Tupla}
+  
+  \begin{Tupla}[Nodo]
+   \tupItem{elem}{$\alpha$}   
+   \tupItem{\\padre}{puntero(Nodo)}
+   \tupItem{\\izq}{puntero(Nodo)}
+   \tupItem{\\der}{puntero(Nodo)}
+  \end{Tupla}
+
+
+\end{Estructura}
+
+\subsection{Invariante de Representacion}
+
+Esta es una cola de prioridad implementada sobre un arbol binario. Elegimos esta estructura en ve de la comunmente usada representacion en arreglo por que nos ahorramos el costo lineal de redefinir el vector/arreglo cuando se llena. 
+
+\subsubsection{El invariante en lenguaje natural.}
+
+\begin{enumerate}
+  \item La prioridad de cada nodo es mayor que la de sus hijos
+  \item[] es izquierdista
+  \item[] esta balanceado (el subarbol derecho puede tener uno menos de altura)
+  \item[] si un elemento es hijo de N, su puntero padre apunta a N
+  \item[] cada subarbol tambien cumple lo anterior
+  \item cant es la cantidad de nodos
+  \item padreUlt apunta al ultimo nodo
+  \item no hay nodos repetidos ni ciclos
+\end{enumerate}
+
+  \Rep[estr][c]{
+  \begin{enumerate}
+  \item esHeap?(c.raiz) \yluego
+  \item c.cant \igobs cantNodos(c.raiz) \yluego
+  \item c.cant > 1 \impluego c.padreUlt \igobs buscarPadreUlt(c.raiz)
+  \item ($\forall p$: puntero(nodo)) (p $\in$ punteros(r.raiz)) $\implies$ \#(p, punteros(r.raiz)) \igobs 1)
+  \end{enumerate} 
+  }
+  
+
+
+  \tadOperacion{esHeap?}{puntero(Nodo)/n}{bool}{}
+  \tadAxioma{esHeap?(n)}{
+  
+  \LIF{ n = NULL } \LTHEN{ true } \LELSE{ \\
+    $\neg$ (n\DRef der \igobs NULL) \impluego $\neg$ (n\DRef izq \igobs NULL) \yluego\\
+    \LIF{ n\DRef izq \igobs NULL }\LTHEN{ true }\LELSE{\\
+    n\DRef elem > n\DRef izq\DRef elem $\land$ n\DRef izq\DRef padre \igobs n \yluego \\
+    \LIF{ n\DRef der \igobs NULL }\LTHEN{ true }\LELSE{\\
+    n\DRef elem > n\DRef der\DRef elem $\land$ n\DRef der\DRef padre \igobs n
+    }\\ \LFI 
+    }\\ \LFI \yluego \\
+    altura(n\DRef izq) - altura(n\DRef der) <= 1  \yluego \\
+    esHeap?(n\DRef izq) $\land$ esHeap?(n\DRef der)  
+    } \\ \LFI\\
+  }
+
+  \tadOperacion{cantNodos}{puntero(Nodo)/n}{nat}{}
+  \tadAxioma{cantNodos(n)}{
+  
+  \LIF{ n = NULL } \LTHEN{ 0 } \LELSE{ \\
+    1 + cantNodos(n\DRef izq) + cantNodos(n\DRef der)
+    } \\ \LFI\\
+  }
+  
+  \tadOperacion{altura}{puntero(Nodo)/n}{nat}{}
+  \tadAxioma{altura(n)}{
+  
+  \LIF{ n = NULL } \LTHEN{ 0 } \LELSE{ \\
+    1 + max(altura(n\DRef izq), altura(n\DRef der))
+    } \\ \LFI\\
+  }
+  
+  \tadOperacion{buscarPadreUlt}{puntero(Nodo)/n}{puntero(nodo)}{cantNodos(n) > 1 $\land$ esHeap?(n)}
+  \tadAxioma{buscarPadreUlt(n)}{
+  
+  \LIF{ n\DRef der \igobs NULL $\lor$ altura(n\DRef der) \igobs 1} \LTHEN{ n } \LELSE{ \\
+    \LIF{ altura(n\DRef der) + 1 \igobs altura(n\DRef izq)} \LTHEN{\\
+     buscarUlt(n\DRef izq) } 
+    \LELSE{buscarUlt(n\DRef der) } \LFI \\ 
+    } \\ \LFI
+  }
+  
+  \tadOperacion{punteros}{puntero(Nodo)/r}{multiconj(punteros(nodo))}{}
+ \tadAxioma{punteros(d)}{
+    \LIF{ r = NULL} \LTHEN{ $\emptyset$} \LELSE{ Ag(r, punteros(r.izq)) $\bigcup$ punteros(r.der)} \LFI
+  }
+  
+
+\subsection{Funcion de Abstraccion}
+
+\tadOperacion{Abs}{estr/c}{colaPrior($\alpha$)}{Rep(c)}
+  \tadAxioma{Abs(c)}{\LIF{ c.cant = 0 }\LTHEN{ vacia }\LELSE{\\
+   encoladoRecursivo(colaSecu(c.raiz)) }\\ \LFI}
+
+\tadOperacion{encoladoRecursivo}{secu($\alpha$)/n}{colaPrior($\alpha$)}{}
+\tadAxioma{encoladoRecursivo(n)}{\LIF{ vacia?(n)}\LTHEN{ vacia }\LELSE{\\ 
+encolar(prim(n),encoladoRecursivo(fin(n)))
+}\LIF}
+
+\tadOperacion{colaSecu}{puntero(Nodo)/n}{secu($\alpha$)/n}{}
+\tadAxioma{colaSecu(c)}{\LIF{ n \igobs NULL } \LTHEN{$ < > $} 
+\LELSE{\\n\DRef elem \argumento colaSecu(n\DRef izq) \& colaSecu(n\DRef der)}\\ \LFI}
+
+\titlex{Representación del iterador}
+Este iterador no es más que un puntero al elemento siguiente y una cola para permitir un eliminado rapido del elemento siguiente.
+ 
+ \begin{Estructura}{itCola($\alpha$)}[itTupla]
+  \begin{Tupla}[itTupla]
+   \tupItem{cola}{puntero(colaPrio($\alpha$))}
+   \tupItem{pSig}{puntero(Nodo)}   
+  \end{Tupla}
+ \end{Estructura}
+
+ \Rep[itTupla][it]{ it.pSig $\in$ punteros(it.cola\DRef raiz) 
+ }\mbox{} \\
+
+  \Abs[itTupla]{itMod($\alpha$)}[it]{im}{Siguientes($im$) $= a \bullet <> \land$ \\ 
+   Anteriores($im$) $= <>$}\\
+\end{Representacion}
+
+\pagebreak
+
+\begin{Algoritmos} \\
+\TipoFuncion{iVacia}{}{colaPrio($\alpha$)} \complejidad{Complejidad:}{1} \\
+\indent res.raiz $\leftarrow$ NULL\\
+\indent res.cant $\leftarrow$ 0\\
+\indent res.padreUlt $\leftarrow$ NULL\\
+\\
+\TipoFuncion{iEncolar}{\Inout{c}{colaPrio($\alpha$)}, \In{a}{$\alpha$}, \In{n}{nat}}{}\complejidad{Complejidad:}{log(n)} \\
+\indent c.cant++ \complejidad{}{1} \\
+\indent var n $\leftarrow$ New Nodo \complejidad{}{1}\\
+\indent n.elem $\leftarrow$ a \complejidad{}{1}\\
+\indent if c.raiz = NULL \{ c.raiz $\leftarrow$ \& n\} \complejidad{Condicion:}{1}\\
+\indent else \{ \\ 
+\indent \indent if c.padreUlt $==$ NULL\{\complejidad{Condicion:}{1}\\
+\indent \indent c.padreUlt $\leftarrow$ c.raiz \complejidad{}{1}\\ 
+\indent \indent n.padre $\leftarrow$ c.raiz \complejidad{}{1}\\
+\indent \indent c.raiz$\rightarrow$izq $\leftarrow$ \& n  \complejidad{}{1} \\
+\indent \indent \} else \{\\
+\indent \indent \indent if c.padreUlt$\rightarrow$der $==$ NULL\{ \complejidad{Condicion:}{1}\\
+\indent \indent \indent \indent n.padre $\leftarrow$ c.padreUlt \complejidad{}{1}\\
+\indent \indent \indent \indent c.padreUlt$\rightarrow$der $\leftarrow$ \& n \complejidad{}{1}\\
+\indent \indent \indent \}else\{ \\
+\indent \indent \indent \indent if $log_2(cant) == int(log_2(cant))$ \{\complejidad{Condicion:}{1}\\
+\indent \indent \indent \indent \indent c.padreUlt $\leftarrow$ busqIzq(c) \complejidad{}{log(n)}\\
+\indent \indent \indent \indent \indent n.padre $\leftarrow$ c.padreUlt\\
+\indent \indent \indent \indent \indent c.padreUlt$\rightarrow$izq $\leftarrow$ \& n\\
+\indent \indent \indent \indent \}else\{\\
+\indent \indent \indent \indent \indent c.padreUlt $\leftarrow$ busqTransversal(c.padreUlt, c) \complejidad{}{log(n)}\\
+\indent \indent \indent \indent \indent n.padre $\leftarrow$ c.padreUlt \complejidad{}{1}\\
+\indent \indent \indent \indent \indent c.padreUlt$\rightarrow$izq $\leftarrow$ \& n \complejidad{}{1}\\
+\indent \indent \indent \indent \}\\
+\indent \indent \indent \}\\
+\indent \indent \}\\
+\indent \}\\
+\indent var parent $\leftarrow$ n.padre \complejidad{}{1}\\
+\indent var aux \complejidad{}{1}\\
+\indent while(parent != NULL $\land$ n.elem > parent$\rightarrow$elem)\{ \complejidad{Subir:}{log(n)}\\
+\indent \indent if parent$\rightarrow$der == n\{ \complejidad{Condicion:}{1}\\
+\indent \indent \indent n.padre $\leftarrow$ parent$\rightarrow$padre \complejidad{}{1}\\
+\indent \indent \indent aux $\leftarrow$ parent$\rightarrow$izq \complejidad{}{1}\\
+\indent \indent \indent parent$\rightarrow$der $\leftarrow$ n.der \complejidad{}{1}\\
+\indent \indent \indent parent$\rightarrow$izq $\leftarrow$ n.izq \complejidad{}{1}\\
+\indent \indent \indent n.der $\leftarrow$ parent \complejidad{}{1}\\
+\indent \indent \indent n.izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent parent$\rightarrow$padre $\leftarrow$ \& n \complejidad{}{1}\\
+\indent \indent \} else \{\\
+\indent \indent \indent n.padre $\leftarrow$ parent$\rightarrow$padre \complejidad{}{1}\\
+\indent \indent \indent aux $\leftarrow$ parent$\rightarrow$der \complejidad{}{1}\\
+\indent \indent \indent parent$\rightarrow$der $\leftarrow$ n.der \complejidad{}{1}\\
+\indent \indent \indent parent$\rightarrow$izq $\leftarrow$ n.izq \complejidad{}{1}\\
+\indent \indent \indent n.izq $\leftarrow$ parent \complejidad{}{1}\\
+\indent \indent \indent n.der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent parent$\rightarrow$padre $\leftarrow$ \& n \complejidad{}{1}\\
+\indent \indent \}\\
+\indent \}\\
+\indent res $\leftarrow$ CrearIt(\& c, \& n) \complejidad{}{1}\\
+\\
+\TipoFuncion{ibusqIzq}{\In{c}{colaPrio($\alpha$)}}{Nodo} \complejidad{Complejidad:}{log(n)}\\
+\indent var actual $\leftarrow$ c.raiz \complejidad{}{1}\\
+\indent while(actual$\rightarrow$izq != NULL)\{ \complejidad{}{log(n)}\\
+\indent \indent actual $\leftarrow$ actual$\rightarrow$izq \complejidad{}{1}\\
+\indent \}\\
+\indent res $\leftarrow$ actual \complejidad{}{1}\\
+\\
+\TipoFuncion{ibusqTransversal}{\In{c}{colaPrio($\alpha$)}, \In{n}{Nodo}}{Nodo} \complejidad{Complejidad:}{2log(n)}\\
+\indent var parent $\leftarrow$ n.padre \complejidad{}{1}\\
+\indent var act $\leftarrow$ n \complejidad{}{1}\\
+\indent while(parent!= NULL $\land$ parent$\rightarrow$der == act )\{ (subo Hasta Ser Raiz o hijo Izquierdo) \complejidad{}{log(n)}\\
+\indent \indent act $\leftarrow$ parent \complejidad{}{1}\\
+\indent \indent parent $\leftarrow$ parent$\rightarrow$padre \complejidad{}{1}\\
+\indent \}\\
+\indent act $\leftarrow$ parent$\rightarrow$der \complejidad{}{1}\\
+\indent while(act$\rightarrow$izq =! NULL)\{ \complejidad{}{log(n)}\\
+\indent \indent act $\leftarrow$ act$\rightarrow$izq \complejidad{}{1}\\
+\indent \}\\
+\indent res $\leftarrow$ act \complejidad{}{1}\\
+\\
+\TipoFuncion{iVacia?}{\In{c}{colaPrio($\alpha$)}}{bool} \complejidad{Complejidad:}{1}\\
+\indent res $\leftarrow$ c.cant $==$ 0 \complejidad{}{1}\\
+\\
+\TipoFuncion{iDesencolar}{\Inout{c}{colaPrio($\alpha$)}}{$\alpha$}\complejidad{}{log(n)}\\
+\indent res $\leftarrow$ c.raiz$\rightarrow$elem
+\indent var ult \complejidad{}{1}\\
+\indent if c.padreUlt$\rightarrow$der != NULL \{ \complejidad{Condicion:}{1}\\
+\indent \indent ult $\leftarrow$ c.padreUlt$\rightarrow$der \complejidad{}{1}\\
+\indent \indent c.padreUlt$\rightarrow$der $\leftarrow$ NULL \complejidad{}{1}\\
+\indent \}else \{\\
+\indent \indent ult $\leftarrow$ c.padreUlt$\rightarrow$izq \complejidad{}{1}\\
+\indent \indent c.padreUlt$\rightarrow$izq $\leftarrow$ NULL \complejidad{}{1}\\
+\indent \}\\
+\indent ult$\rightarrow$padre $\leftarrow$ NULL \complejidad{}{1}\\
+\indent ult$\rightarrow$izq $\leftarrow$ c.raiz$\rightarrow$izq \complejidad{}{1}\\
+\indent ult$\rightarrow$der $\leftarrow$ c.raiz$\rightarrow$der \complejidad{}{1}\\
+\indent ult$\rightarrow$der$\rightarrow$padre $\leftarrow$ ult \complejidad{}{1}\\
+\indent ult$\rightarrow$izq$\rightarrow$padre $\leftarrow$ ult \complejidad{}{1}\\
+\indent delete c.raiz \complejidad{}{1}\\
+\indent c.raiz $\leftarrow$ ult \complejidad{}{1}\\ %tengo en c.raiz y (ult) el nodo a bajar 
+\indent var aux $\leftarrow$ ult \complejidad{}{1}\\
+\indent var hijo \complejidad{}{1}\\
+\indent while (ult$\rightarrow$izq != NULL $\land$ ult$\rightarrow$der != NULL $\lor$  \complejidad{Bajar:}{log(n)}\\
+\indent ult$\rightarrow$elem < ult$\rightarrow$der$\rightarrow$elem $\lor$ ult$\rightarrow$elem$ < $ult$\rightarrow$izq$\rightarrow$elem )\{ \\
+\indent \indent if ult$\rightarrow$der != NULL \{ \complejidad{}{1}\\
+\indent \indent \indent if ult$\rightarrow$izq$\rightarrow$elem > ult$\rightarrow$der$\rightarrow$elem \{ \complejidad{}{1}\\
+\indent \indent \indent \indent if ult $==$ c.raiz \{c.raiz $\leftarrow$ ult.izq\} \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\leftarrow$ ult.izq \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ izq \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ izq $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ der \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ der $\leftarrow$ ult$\rightarrow$der \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ padre $\leftarrow$ ult $\rightarrow$ padre \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ padre $\leftarrow$ hijo \complejidad{}{1}\\
+\indent \indent \indent \}else\{\\
+\indent \indent \indent \indent if ult $==$ c.raiz \{c.raiz $\leftarrow$ ult.der\} \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\leftarrow$ ult.der \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ der \complejidad{}{1}\\
+\indent \indent \indent \indent hijo$\rightarrow$der $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent \indent \indent ult$\rightarrow$der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ izq \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ izq $\leftarrow$ ult$\rightarrow$izq \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ padre $\leftarrow$ ult $\rightarrow$ padre \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ padre $\leftarrow$ hijo \complejidad{}{1}\\
+\indent \indent \indent \}\\
+\indent \indent \}else\{\\
+\indent \indent \indent if ult $==$ c.raiz \{c.raiz $\leftarrow$ ult.izq\} \complejidad{}{1}\\
+\indent \indent \indent hijo $\leftarrow$ ult.izq \complejidad{}{1}\\
+\indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ izq \complejidad{}{1}\\
+\indent \indent \indent hijo $\rightarrow$ izq $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent \indent ult $\rightarrow$ izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ der \complejidad{}{1}\\
+\indent \indent \indent hijo $\rightarrow$ der $\leftarrow$ ult$\rightarrow$der \complejidad{}{1}\\
+\indent \indent \indent ult $\rightarrow$ der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent hijo $\rightarrow$ padre $\leftarrow$ ult $\rightarrow$ padre \complejidad{}{1}\\
+\indent \indent \indent ult $\rightarrow$ padre $\leftarrow$ hijo \complejidad{}{1}\\
+\indent \indent \}\\
+
+
+\TipoFuncion{ibusqDer}{\In{c}{colaPrio($\alpha$)}}{Nodo}\\
+\indent var actual $\leftarrow$ c.raiz \complejidad{}{1}\\
+\indent while(actual$\rightarrow$der != NULL)\{ \complejidad{}{log(n)}\\
+\indent \indent actual $\leftarrow$ actual$\rightarrow$der \complejidad{}{1}\\
+\indent \}\\
+\indent res $\leftarrow$ actual \complejidad{}{1}\\
+
+\TipoFuncion{iswapNodo}{\Inout{c}{colaPrio($\alpha$)}, \Inout{n1}{puntero(Nodo)}}, \Inout{n2}{puntero(Nodo)}\\
+\indent 
+
+
+\titlex{Algoritmos del Iterador}
+
+\TipoFuncion{CrearIt}{\In{c}{colaPrio($\alpha$)}, \In{p}{puntero(Nodo)}}{itCola($\alpha$)} \complejidad{Complejidad:}{1}\\
+\indent res.pSig $\leftarrow$ p \complejidad{}{1}\\
+\indent res.cola $\leftarrow$ \& c \complejidad{}{1}\\
+\end{Algoritmos}
+
+\TipoFuncion{Siguiente}{\In{it}{itCola($\alpha$)}}{$\alpha$} \complejidad{Complejidad:}{1}\\
+\indent res $\leftarrow$ pSig$\rightarrow$elem\\
+
+\TipoFuncion{ElimSig}{\Inout{it}{itCola($\alpha$)}}{} \complejidad{}{log(n)}\\
+\indent var ult \complejidad{}{1}\\
+\indent var c $\leftarrow$ it\DRef cola \complejidad{}{1}\\
+\indent if c\DRef raiz == it.pSig \{ iDesencolar(c) \} else \{ \complejidad{}{log(n)}\\
+\indent \indent if c\DRef padreUlt\DRef der == NULL\{ \complejidad{}{1}\\
+\indent \indent \indent ult$\leftarrow$ c\DRef padreUlt\DRef izq \complejidad{}{1}\\
+\indent \indent \} else\{\\
+\indent \indent \indent ult$\leftarrow$ c\DRef padreUlt\DRef der \complejidad{}{1}\\
+\indent \indent \} \\
+\indent \indent var deboRestaurar? $\leftarrow$ false \complejidad{}{1}\\
+\indent \indent if $\neg$ esDescendiente(ult, it.pSig) \{ \complejidad{Condicion:}{log(n)}\\
+\indent \indent \indent ult$\leftarrow$ buscarDer(it.pSig) \complejidad{}{log(n)}\\
+\indent \indent \indent ult\DRef padre\DRef der$\leftarrow$NULL \complejidad{}{1}\\
+\indent \indent \indent deboRestaurar? $\leftarrow$ true \complejidad{}{1}\\
+\indent \indent \} \\
+\indent \indent ult$\rightarrow$padre $\leftarrow$ it.pSig\DRef padre \complejidad{}{1}\\
+\indent \indent ult$\rightarrow$izq $\leftarrow$ it.pSig$\rightarrow$izq \complejidad{}{1}\\
+\indent \indent ult$\rightarrow$der $\leftarrow$ it.pSig$\rightarrow$der \complejidad{}{1}\\
+\indent \indent ult$\rightarrow$der$\rightarrow$padre $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent ult$\rightarrow$izq$\rightarrow$padre $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent delete it.pSig \complejidad{}{1}\\
+\indent \indent var colaUlt \complejidad{}{1}\\
+\indent \indent if deboRestaurar? \{ colaUlt $\leftarrow$ buscarDer(ult)\} \complejidad{}{log(n)}\\
+\indent \indent var aux $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent var hijo \complejidad{}{1}\\
+\indent \indent while (ult$\rightarrow$izq != NULL $\land$ ult$\rightarrow$der != NULL $\lor$  \complejidad{Bajar:}{log(n)}\\
+\indent \indent ult$\rightarrow$elem < ult$\rightarrow$der$\rightarrow$elem $\lor$ ult$\rightarrow$elem$ < $ult$\rightarrow$izq$\rightarrow$elem )\{
+\indent \indent if ult$\rightarrow$der != NULL \{ \complejidad{}{1}\\
+\indent \indent \indent if ult$\rightarrow$izq$\rightarrow$elem > ult$\rightarrow$der$\rightarrow$elem \{ \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\leftarrow$ ult.izq \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ izq \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ izq $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ der \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ der $\leftarrow$ ult$\rightarrow$der \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ padre $\leftarrow$ ult $\rightarrow$padre \complejidad{}{1}\\
+else\{\\
+\indent \indent \indent \indent hijo $\leftarrow$ ult.der \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ der \complejidad{}{1}\\
+\indent \indent \indent \indent hijo$\rightarrow$der $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent \indent \indent ult$\rightarrow$der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ izq \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ izq $\leftarrow$ ult$\rightarrow$izq \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent \indent hijo $\rightarrow$ padre $\leftarrow$ ult $\rightarrow$ padre \complejidad{}{1}\\
+\indent \indent \indent \indent ult $\rightarrow$ padre $\leftarrow$ hijo \complejidad{}{1}\\
+\indent \indent \indent \}\\
+\indent \indent \}else\{\\
+\indent \indent \indent hijo $\leftarrow$ ult.izq \complejidad{}{1}\\
+\indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ izq \complejidad{}{1}\\
+\indent \indent \indent hijo $\rightarrow$ izq $\leftarrow$ ult \complejidad{}{1}\\
+\indent \indent \indent ult $\rightarrow$ izq $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent aux $\leftarrow$ hijo $\rightarrow$ der \complejidad{}{1}\\
+\indent \indent \indent hijo $\rightarrow$ der $\leftarrow$ ult$\rightarrow$der \complejidad{}{1}\\
+\indent \indent \indent ult $\rightarrow$ der $\leftarrow$ aux \complejidad{}{1}\\
+\indent \indent \indent hijo $\rightarrow$ padre $\leftarrow$ ult $\rightarrow$ padre \complejidad{}{1}\\
+\indent \indent \indent ult $\rightarrow$ padre $\leftarrow$ hijo \complejidad{}{1}\\
+\indent \indent \}\\
+\indent \indent \} \\
+\indent \indent \} \\
+\indent \}\\
+\indent if deboRestaurar? \{if c\DRef padreUlt\DRef der==NULL \{ \complejidad{}{1}\\
+\indent \indent colaUlt\DRef der $\leftarrow$ c\DRef padreUlt\DRef izq \complejidad{}{1}\\
+\indent \indent c\DRef padreUlt\DRef izq $\leftarrow$  NULL \complejidad{}{1}\\
+\indent \} else\{
+\indent \indent colaUlt\DRef der $\leftarrow$ c\DRef padreUlt\DRef der  \complejidad{}{1}\\
+\indent \indent c\DRef padreUlt\DRef der $\leftarrow$ NULL \complejidad{}{1}\\
+\indent \}\\
+
+\TipoFuncion{esDescendiente}{\In{n}{puntero(Nodo)}, \In{p}{puntero(Nodo)}}{bool} \complejidad{Complejidad}{log(n)}\\
+\indent res $\leftarrow$ false \complejidad{}{1}\\
+\indent while n\DRef padre != NULL \{ \complejidad{}{log(n)}\\
+\indent \indent if p == n\{ res $\leftarrow$ true\} \complejidad{}{1}\\
+\indent \indent n$\leftarrow$ n\DRef padre \complejidad{}{1}\\
+ \indent \}\\
