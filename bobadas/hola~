@@ -45,13 +45,8 @@ return (n, res)
  n=0
  RadixSortPorTema(A)	Usa BucketSort (O(n|t|))
  RadixSortPorDisco(A)	Usa BucketSort (O(n|d|))
- ArmarListaArtistas(A)	O(b) E o(n) ¿contar apariciones?
- 
- 
- 
- 
-  
-  
+ ArmarListaArtistas(A)	O(b) E o(n)
+ No se me rindo
   
   
 aloha disco k

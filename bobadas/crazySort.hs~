@@ -2,7 +2,7 @@ crazySort [] = []
 crazySort (x : xs) = x : (crazySort (reverse xs) )
 
 suma2 [] = []
-suma2 (x:xs) = if xs == [] then [x] else ( x + (head xs) ) : suma2(tail xs)
+suma2 (x:xs) = if xs == [] then [x] else ( x + (head xs) ) : casiGauss(tail xs)
 
 casiGauss ls = suma2 (crazySort ls)
 
