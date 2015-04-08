@@ -135,45 +135,63 @@ Nat Lista<T>::longitud() const {
 
 template <typename T>
 T& Lista<T>::iesimo(Nat i) {
-	/**
-	 * COMPLETAR!!!
-	 */
+	int act = 0;
+	Nodo* actual = prim;
+	while (act < i){
+		actual = actual->sig;
+		act++;
+	}
+	return actual->dato;
 }
 
 template <typename T>
 const T& Lista<T>::iesimo(Nat i) const {
-	/**
-	 * COMPLETAR!!!
-	 */
+	int act = 0;
+	Nodo* actual = prim;
+	while (act < i){
+		actual = actual->sig;
+		act++;
+	}
+	return actual->dato;
 }
 
 template <typename T>
 bool Lista<T>::operator==(const Lista<T>& otra) const {
-	/**
-	 * COMPLETAR!!!
-	 */
-  return false;
+	int act = 0;
+	if (longitud() != otra.longitud()){ 
+		return false;
+	}
+	while (act < longitud()){
+		if (iesimo(act) != otra.iesimo(act)){
+			return false
+		}
+		act++;
+	}
+  return true;
 }
 
 template <typename T>
 void Lista<T>::agAdelante(const T& elem) {
-	/**
-	 * COMPLETAR!!!
-	 */
+	Nodo* nuevo = new Nodo;
+	nuevo->dato = elem;
+	nuevo->sig = prim;
+	prim = nuevo;
+	len++;
 }
 
 template <typename T>
 void Lista<T>::agAtras(const T& elem) {
-	/**
-	 * COMPLETAR!!!
-	 */
+	Nodo* nuevo = new Nodo;
+	nuevo->dato = elem;
+	nuevo->sig = NULL;
+	fin->sig = prim;
+	fin = nuevo;
+	len++;
 }
 
 template <typename T>
 void Lista<T>::eliminar(Nat i) {
-	/**
-	 * COMPLETAR!!!
-	 */
+	while(){}
 }
 
 template <typename T>
