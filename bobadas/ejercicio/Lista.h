@@ -105,27 +105,30 @@ Lista<T>::Lista()
 
 template <typename T>
 Lista<T>::Lista(const Lista& otra) {
-	/**
-	 * COMPLETAR!!!
-	 */
+	int i = 0;
+	while( i < otra.longitud()){
+		this->agAtras( otra.iesimo( i ) );
+		i++;
+	}
 }
 
 template <typename T>
 Lista<T>::~Lista() {
-	Nodo* actual = prim;
-	while(len != 0){
-		prim = prim->sig;
-		delete actual;
-		actual = prim;
-		len--;
+	while(this->longitud() != 0){
+		eliminar(0);
 	}
 }
 
 template <typename T>
 Lista<T>& Lista<T>::operator=(const Lista<T>& otra) {
-	/**
-	 * COMPLETAR!!!
-	 */
+	int i = 0;
+	while(this->longitud() != 0){
+		eliminar(0);
+	}
+	while( i < otra.longitud()){
+		this->agAtras( otra.iesimo( i ) );
+		i++;
+	}
 }
 
 template <typename T>
@@ -163,7 +166,7 @@ bool Lista<T>::operator==(const Lista<T>& otra) const {
 	}
 	while (act < longitud()){
 		if (iesimo(act) != otra.iesimo(act)){
-			return false
+			return false;
 		}
 		act++;
 	}
@@ -176,6 +179,9 @@ void Lista<T>::agAdelante(const T& elem) {
 	nuevo->dato = elem;
 	nuevo->sig = prim;
 	prim = nuevo;
+	if (fin == NULL){
+		fin = nuevo;
+	}
 	len++;
 }
 
@@ -184,21 +190,50 @@ void Lista<T>::agAtras(const T& elem) {
 	Nodo* nuevo = new Nodo;
 	nuevo->dato = elem;
 	nuevo->sig = NULL;
-	fin->sig = prim;
+	if (prim == NULL){
+		prim = nuevo;
+	}
+	if (fin != NULL){
+		fin->sig = nuevo;	
+	}
 	fin = nuevo;
 	len++;
 }
 
 template <typename T>
 void Lista<T>::eliminar(Nat i) {
-	while(){}
+	int actual = 0;
+	Nodo* iesimo = prim;
+	Nodo* anterior = NULL;
+	while(actual < i){
+		anterior = iesimo;
+		iesimo = iesimo->sig;
+		actual++;
+	}
+	if (anterior != NULL){
+		anterior->sig = iesimo->sig; 
+	}else{
+		prim = iesimo->sig;
+	}
+	if ( fin==iesimo ){
+		fin = anterior;
+	}
+	delete iesimo;
+	len--;
 }
 
 template <typename T>
 void Lista<T>::mostrar(std::ostream& o) const {
-	/**
-	 * COMPLETAR!!!
-	 */
+	int i = 0;
+	o << "[";
+	while( i < longitud()){
+		if (i == longitud() - 1){
+			o << iesimo(i) << "]";
+		}else{
+			o << iesimo(i) << ", ";
+		}
+		i++;
+	}	
 }
 
 template <typename T>

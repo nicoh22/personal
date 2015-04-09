@@ -42,6 +42,20 @@ void iesimo_puede_modificar_lista() {
   ASSERT_EQ(l.longitud(), 1);
 }
 
+void mostrar_listas(){
+	Lista<char> l;
+	l.agAtras('w');
+	l.agAtras('e');
+	l.agAtras('n');
+	l.agAtras('a');
+	l.agAtras('c');
+	l.agAtras('a');
+	l.agAtras('p');
+	l.agAtras('o');
+	
+	std::cout << l << "\n";
+}
+
 int main() {
   RUN_TEST(lista_vacia_mide_cero);
   RUN_TEST(listas_vacias_son_iguales);
@@ -49,5 +63,6 @@ int main() {
   RUN_TEST(agregar_adelante_pone_al_principio);
   RUN_TEST(eliminar_unico_elemento_deja_lista_vacia);
   RUN_TEST(iesimo_puede_modificar_lista);
+  RUN_TEST(mostrar_listas);
   return 0;
 }
