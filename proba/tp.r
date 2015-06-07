@@ -35,7 +35,7 @@ ejb<-function(n){
 }
 
 ejc<-function(n){
-	cuenta<-c()
+	cuenta<-0
 	x<-1:639
 	t<-n
 	vpeso<- rep.int(c(1/2000,(1-10/2000)/639),c(10,629))
@@ -47,10 +47,10 @@ ejc<-function(n){
 			z<-unique(z)
 			count <- count+1
 		}
-		cuenta<-c(cuenta, count)
+		cuenta<-cuenta+count
 		t<-t-1
 	}
-	sum(cuenta)/n
+	cuenta/n
 }
 
 
@@ -58,6 +58,8 @@ ejd<-function(n){
 	cuenta<-c()
 	x<-1:639
 	t<-n
-	
+	while( t > 0){
+		
+	}
 	
 }
