@@ -8,6 +8,14 @@ typedef unsigned int Nat;
 
 template <typename T>
 class Stack{
+	public:
+		Stack();
+		~Stack();
+		void Push(const T& elem);
+		const T Pop(); //saca de la pila y retorna el elemento
+		void Show();
+		const Nat cantElem();
+		
 	private:
 	
 		struct StackElem{
@@ -17,31 +25,23 @@ class Stack{
 	
 	StackElem* top;
 	Nat tam;
-	
-	
-	public:
-		Stack();
-		~Stack();
-		void Push(const T& elem);
-		const T& Pop(); //saca de la pila y retorna el elemento
-		void Show();
-		const Nat cantElem();
+
 };
 
 template <typename T>
-Stack::Stack()
-	: top(nullptr), tam(0) {
+Stack<T>::Stack()
+	: top(NULL), tam(0) {
 }
 
 template <typename T>
-Stack::~Stack(){
+Stack<T>::~Stack(){
 	while(cantElem() > 0){
 		Pop();
 	}
 }
 
 template <typename T>
-void Stack::Push(const T& elem){
+void Stack<T>::Push(const T& elem){
 	StackElem* nuevo= new StackElem;
 	nuevo->dato = elem;
 	nuevo->sig = top;
@@ -50,9 +50,9 @@ void Stack::Push(const T& elem){
 }
 
 template <typename T>
-const T& Stack::Pop(){
+const T Stack<T>::Pop(){
 	StackElem* old = top;
-	res = old->dato;
+	T res = old->dato;
 	top = top->sig;
 	tam--;
 	delete old;
@@ -60,10 +60,14 @@ const T& Stack::Pop(){
 }
 
 template <typename T>
-void Stack::Show(){}
+void Stack<T>::Show(){
+	while(cantElem() > 0){
+		Pop();
+	}
+}
 
 template <typename T>
-const Nat Stack::cantElem(){
+const Nat Stack<T>::cantElem(){
 	return tam;
 }
 #endif // STACK_H_
