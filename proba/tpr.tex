@@ -1,3 +1,31 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[paper=a4paper, hmargin=1.5cm, bottom=1.5cm, top=3.5cm]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{xspace}
+\usepackage{xargs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{soul}
+
+\begin{document}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+	language=R,
+	backgroundcolor=\color{white},
+	commentstyle=\color{mygreen},
+	keywordstyle=\color{blue},
+	numberstyle=\tiny\color{mygray},
+	rulecolor=\color{black},
+	stringstyle=\color{mymauve},
+	basicstyle=\footnotesize,
+	}
+
+\begin{lstlisting}
 #Todas las funciones se llaman con un parametro que determina la cantidad 
 #de veces que se realiza el experimento. A partir de esos valores se realiza
 #un promedio para estimar la media.
@@ -111,3 +139,11 @@ ejd<-function(n){
 #		el primero: 551.055
 #		el segundo: 897.626
 
+#Vemos que el caso del ejercicio "c" (donde hay "figuritas dificiles") es el
+#que necesita mayor cantidad de sobres, mientras que el ejercicio "d" provee
+#una ventaja muy significativa al que completa el album primero y al segundo 
+#lo deja con una media similar al caso "a" y "b"
+
+\end{lstlisting}
+
+\end{document}
