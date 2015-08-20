@@ -51,7 +51,18 @@ section .text
 	; unsigned char palabraLongitud( char *p );
 	palabraLongitud:
 		; COMPLETAR AQUI EL CODIGO
-
+	;rdi *char
+	;al res
+	xor rcx, rcx
+.ciclo:		
+	cmp byte [rdi+rcx], NULL	
+	je .fin
+	inc rcx
+	jump .ciclo
+.fin:
+	mov al, cl
+	ret
+	
 	; bool palabraMenor( char *p1, char *p2 );
 	palabraMenor:
 		; COMPLETAR AQUI EL CODIGO
