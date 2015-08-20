@@ -28,12 +28,12 @@
 	%define TRUE 		1
 	%define FALSE 		0
 
-	%define LISTA_SIZE 	    	 0
+	%define LISTA_SIZE 	    	 8
 	%define OFFSET_PRIMERO 		 0
 
-	%define NODO_SIZE     		 0
+	%define NODO_SIZE     		 16
 	%define OFFSET_SIGUIENTE   	 0
-	%define OFFSET_PALABRA 		 0
+	%define OFFSET_PALABRA 		 8
 
 
 section .rodata
@@ -73,21 +73,21 @@ section .text
 	.ciclo:
 		mov dl, [rsi+rcx]		
 		cmp byte [rdi+rcx], dl	
-		jne .break
-		inc rcx
+		jne .break	
 		;control de fin de string?
 		cmp dl, NULL
 		je .break
 		cmp byte [rdi+rcx], NULL
 		je .break
+		inc rcx
 		jmp .ciclo
 	.break:
 		cmp byte [rdi+rcx], dl
 		jge .mayor
-		mov al, TRUE
+		mov rax, TRUE
 		ret
 	.mayor:
-		mov al, FALSE
+		mov rax, FALSE
 		ret	
 		
 	; void palabraFormatear( char *p, void (*funcModificarString)(char*) );
@@ -95,11 +95,24 @@ section .text
 		; COMPLETAR AQUI EL CODIGO
 		;rdi p
 		;rsi funcion
+		push rbp
+		mov rbp, rsp
+		
+		call rsi
+		
+		pop rbp
+		ret
 		
 	; void palabraImprimir( char *p, FILE *file );
 	palabraImprimir:
-		; COMPLETAR AQUI EL CODIGO
-
+		;rdi *char 
+		;rsi *FILE
+		
+		xor rcx, rcx
+	.ciclo:
+		mov dl, [rsi+rcx]		
+		cmp byte [rdi+rcx], dl
+	
 	; char *palabraCopiar( char *p );
 	palabraCopiar:
 		; COMPLETAR AQUI EL CODIGO
