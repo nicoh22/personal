@@ -53,24 +53,49 @@ section .text
 		; COMPLETAR AQUI EL CODIGO
 	;rdi *char
 	;al res
-	xor rcx, rcx
-.ciclo:		
-	cmp byte [rdi+rcx], NULL	
-	je .fin
-	inc rcx
-	jump .ciclo
-.fin:
-	mov al, cl
-	ret
+		xor rcx, rcx
+	.ciclo:		
+		cmp byte [rdi+rcx], NULL	
+		je .fin
+		inc rcx
+		jmp .ciclo
+	.fin:
+		mov al, cl
+		ret
 	
 	; bool palabraMenor( char *p1, char *p2 );
 	palabraMenor:
 		; COMPLETAR AQUI EL CODIGO
-
+		;rdi p1
+		;rsi p2
+		;al bool
+		xor rcx, rcx
+	.ciclo:
+		mov dl, [rsi+rcx]		
+		cmp byte [rdi+rcx], dl	
+		jne .break
+		inc rcx
+		;control de fin de string?
+		cmp dl, NULL
+		je .break
+		cmp byte [rdi+rcx], NULL
+		je .break
+		jmp .ciclo
+	.break:
+		cmp byte [rdi+rcx], dl
+		jge .mayor
+		mov al, TRUE
+		ret
+	.mayor:
+		mov al, FALSE
+		ret	
+		
 	; void palabraFormatear( char *p, void (*funcModificarString)(char*) );
 	palabraFormatear:
 		; COMPLETAR AQUI EL CODIGO
-
+		;rdi p
+		;rsi funcion
+		
 	; void palabraImprimir( char *p, FILE *file );
 	palabraImprimir:
 		; COMPLETAR AQUI EL CODIGO
