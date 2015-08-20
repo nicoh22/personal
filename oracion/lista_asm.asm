@@ -25,7 +25,7 @@
 
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 		0
-	%define TRUE 		0
+	%define TRUE 		1
 	%define FALSE 		0
 
 	%define LISTA_SIZE 	    	 0
