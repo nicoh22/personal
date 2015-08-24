@@ -5,7 +5,7 @@
 	global palabraFormatear
 	global palabraImprimir
 	global palabraCopiar
-	
+
 ; LISTA y NODO
 	global nodoCrear
 	global nodoBorrar
@@ -22,11 +22,12 @@
 ; YA IMPLEMENTADAS EN C
 	extern palabraIgual
 	extern insertarAtras
-
+	extern malloc
+	extern fprintf
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 		0
 	%define TRUE 		1
-	%define FALSE 		0
+	%define FALSE		0
 
 	%define LISTA_SIZE 	    	 8
 	%define OFFSET_PRIMERO 		 0
@@ -37,7 +38,7 @@
 
 
 section .rodata
-
+format: DB "%s", 10, 0
 
 section .data
 
@@ -54,15 +55,15 @@ section .text
 	;rdi *char
 	;al res
 		xor rcx, rcx
-	.ciclo:		
-		cmp byte [rdi+rcx], NULL	
+	.ciclo:
+		cmp byte [rdi+rcx], NULL
 		je .fin
 		inc rcx
 		jmp .ciclo
 	.fin:
 		mov al, cl
 		ret
-	
+
 	; bool palabraMenor( char *p1, char *p2 );
 	palabraMenor:
 		; COMPLETAR AQUI EL CODIGO
@@ -71,9 +72,9 @@ section .text
 		;al bool
 		xor rcx, rcx
 	.ciclo:
-		mov dl, [rsi+rcx]		
-		cmp byte [rdi+rcx], dl	
-		jne .break	
+		mov dl, [rsi+rcx]
+		cmp byte [rdi+rcx], dl
+		jne .break
 		;control de fin de string?
 		cmp dl, NULL
 		je .break
@@ -88,34 +89,74 @@ section .text
 		ret
 	.mayor:
 		mov rax, FALSE
-		ret	
-		
+		ret
+
 	; void palabraFormatear( char *p, void (*funcModificarString)(char*) );
 	palabraFormatear:
-		; COMPLETAR AQUI EL CODIGO
 		;rdi p
 		;rsi funcion
 		push rbp
 		mov rbp, rsp
-		
+
 		call rsi
-		
+
 		pop rbp
 		ret
-		
+
 	; void palabraImprimir( char *p, FILE *file );
 	palabraImprimir:
-		;rdi *char 
+		;rdi *char
 		;rsi *FILE
+		push rbp
+		mov rbp, rsp
+
+		mov rdx, rdi
+		mov rdi, rsi
+		mov rsi, format
+
+		call fprintf ; rdi *FILE rsi *format + parametros(rdx, rcx)
+
+		pop rbp
+		ret
+
+
+
+	; char *palabraCopiar( char *p );
+	palabraCopiar:
+		;rdi *char
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		mov r12, rdi 
+		call palabraLongitud ; al
+		
+		xor rbx, rbx
+		mov bl, al
+		
+		xor rdi, rdi
+		mov dil, al 
+		inc rdi
+		call malloc ; rax *char
 		
 		xor rcx, rcx
 	.ciclo:
-		mov dl, [rsi+rcx]		
-		cmp byte [rdi+rcx], dl
-	
-	; char *palabraCopiar( char *p );
-	palabraCopiar:
-		; COMPLETAR AQUI EL CODIGO
+		; rbx longitud	
+		; rax *res
+		; r12 *p
+		
+		mov dl, [r12 + rcx]
+		mov [rax + rcx], dl
+		inc rcx
+		cmp rbx, rcx
+		jne .ciclo
+		
+		mov byte [rax + rcx], NULL
+		
+		pop r12
+		pop rbx
+		pop rbp
+		ret
 
 
 ;/** FUNCIONES DE LISTA Y NODO **/
@@ -123,12 +164,30 @@ section .text
 
 	; nodo *nodoCrear( char *palabra );
 	nodoCrear:
-		; COMPLETAR AQUI EL CODIGO
+		;rdi *char
+		push rbp
+		mov rbp, rsp
+		sub rsp, 8
+		push rbx
+		
+		mov rbx, rdi
+		mov rdi, NODO_SIZE
+		call malloc ; rax *nodo
+		
+		
+		
+		pop rbp
+		ret
 
 	; void nodoBorrar( nodo *n );
 	nodoBorrar:
 		; COMPLETAR AQUI EL CODIGO
-
+		push rbp
+		mov rbp, rsp
+		call free
+		pop rbp
+		ret
+		
 	; lista *oracionCrear( void );
 	oracionCrear:
 		; COMPLETAR AQUI EL CODIGO

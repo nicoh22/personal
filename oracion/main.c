@@ -1,5 +1,6 @@
+#include <stdlib.h>
 #include "lista.h"
-#include <stdio.h>
+
 
 int main (void){
 	// COMPLETAR AQUI EL CODIGO
@@ -13,5 +14,12 @@ int main (void){
 	bool f = palabraMenor("hola", "hola");
 	
 	printf("hola chau: %d\nabc j: %d\nhola hola: %d\n", d, e, f);
+	
+	FILE *archivo = fopen("/dev/stdout", "a");
+	palabraImprimir("Casa, arbol!", archivo); //File pointer!
+	fclose(archivo);
+	char* p = palabraCopiar("palabrita");
+	printf("%s\n", p);
+	free(p);
 	return 0;
 }

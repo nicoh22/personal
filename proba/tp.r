@@ -1,3 +1,6 @@
+#Nicolas Carlos Hernandez
+#LU 122/13
+
 #Todas las funciones se llaman con un parametro que determina la cantidad 
 #de veces que se realiza el experimento. A partir de esos valores se realiza
 #un promedio para estimar la media.
@@ -10,14 +13,14 @@ eja<-function(n){
 		faltantes<-x
 		count<-0 # cuenta la cantidad de sobres que necesito para llenar album 
 		while( length(faltantes) != 0){
-			z <- sample(x, 5, replace=FALSE)# compro un sobre
+			z <- sample(x, 5, replace=FALSE) # compro un sobre
 			faltantes<-faltantes[! faltantes %in% z] #saco las del sobre
 			count <- count+1 
 		}
-		cuenta<-cuenta+count
+		cuenta<-cuenta+count #acumulo resultados parciales
 		t<-t-1
 	}
-	cuenta/n
+	cuenta/n #calculo la media
 }
 
 ejb<-function(n){ #misma funcion pero con replace=TRUE
@@ -68,7 +71,7 @@ ejd<-function(n){
 		cuentag<-0
 		cuentap<-0
 		pedro<-x #Las que le faltan para completar album a Pedro
-		gaston<-x
+		gaston<-x #idem con Gaston
 		while(length(pedro) != 0 && length(gaston) !=0 ){ #hasta que alguno llene album
 			sobreg<-sample(x, 5, replace=FALSE)
 			sobrep<-sample(x, 5, replace=FALSE)
@@ -110,4 +113,9 @@ ejd<-function(n){
 # ejercicio d: 
 #		el primero: 551.055
 #		el segundo: 897.626
+
+#Vemos que el caso del ejercicio "c" (donde hay "figuritas dificiles") es el
+#que necesita mayor cantidad de sobres, mientras que el ejercicio "d" provee
+#una ventaja muy significativa al que completa el album primero y al segundo 
+#lo deja con una media similar al caso "a" y "b"
 
