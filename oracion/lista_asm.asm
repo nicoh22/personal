@@ -26,6 +26,7 @@
 	extern fprintf
 	extern free
 	extern fopen
+	extern fclose
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 		0
 	%define TRUE 		1
@@ -56,14 +57,13 @@ section .text
 		; COMPLETAR AQUI EL CODIGO
 	;rdi *char
 	;al res
-		xor rcx, rcx
+		xor rax, rax
 	.ciclo:
-		cmp byte [rdi+rcx], NULL
+		cmp byte [rdi+rax], NULL
 		je .fin
-		inc rcx
+		inc rax
 		jmp .ciclo
 	.fin:
-		mov al, cl
 		ret
 
 	; bool palabraMenor( char *p1, char *p2 );
@@ -201,7 +201,7 @@ section .text
 		mov rdi, LISTA_SIZE
 		call malloc
 		
-		mov [rax + OFFSET_PRIMERO], NULL
+		mov qword [rax + OFFSET_PRIMERO], NULL
 		pop rbp
 		ret
 		
@@ -265,8 +265,9 @@ section .text
 		mov rdi, rbx
 		call fclose
 		
+		pop r12
 		pop rbx
-		add rsp, 24
+		add rsp, 16
 		pop rbp
 		ret
 
@@ -275,11 +276,80 @@ section .text
 
 	; float longitudMedia( lista *l );
 	longitudMedia:
-		; COMPLETAR AQUI EL CODIGO
+		; rdi lista
+		; xmm0 float
+		push rbp
+		mov rbp, rsp
+		sub rsp, 16
+		push rbx
+		push r12
+		mov qword [rsp - 8], 0
+		xor rbx, rbx
+		mov r12, [rdi + OFFSET_PRIMERO]
+		
+	.ciclo:
+		cmp r12, NULL
+		je .fin
+		mov rdi, r12	
+		call palabraLongitud
+		add bl, al
+		inc qword [rsp - 8]
+		jmp .ciclo
+		
+	.fin:
+		xorpd xmm0, xmm0
+		cmp rbx, 0
+		je .volver
+			
+		  
+	.volver:
+		pop r12
+		pop rbx
+		pop rbp
+		ret
 
 	; void insertarOrdenado( lista *l, char *palabra, bool (*funcCompararPalabra)(char*,char*) );
 	insertarOrdenado:
-		; COMPLETAR AQUI EL CODIGO
+		; rdi lista
+		; rsi palabra
+		; rdx funcion
+		
+		push rbp
+		mov rbp, rsp
+		sub rsp, 24
+		push r12
+		
+		mov r12, [rdi + OFFSET_PRIMERO]
+		mov [rsp - 8], rdx
+		mov [rsp - 16], rsi
+		
+		cmp r12, NULL
+		Jne .ciclo
+		lea r12, [rdi + OFFSET_PRIMERO]
+		jmp .fin
+		
+	.ciclo:
+		cmp [r12], NULL
+		je .fin
+		
+		call [rsp - 8]
+		cmp al, TRUE
+		je .fin
+		
+		mov r12, [r12]
+		add r12, OFFSET_SIGUIENTE
+		jmp .ciclo
+	.fin:
+		mov rdi, [rsp - 16]	
+		call nodoCrear
+		mov rdx, [r12]
+		mov [rax + OFFSET_SIGUIENTE], rdx
+		mov [r12], rax
+		
+	
+	.volver:
+		pop rbp
+		ret
 
 	; void filtrarAltaLista( lista *l, bool (*funcCompararPalabra)(char*,char*), char *palabraCmp );
 	filtrarPalabra:
