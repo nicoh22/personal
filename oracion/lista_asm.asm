@@ -25,6 +25,7 @@
 	extern malloc
 	extern fprintf
 	extern free
+	extern fopen
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 		0
 	%define TRUE 		1
@@ -40,7 +41,7 @@
 
 section .rodata
 format: DB "%s", 10, 0
-
+append: DB "a", 0
 section .data
 
 
@@ -240,12 +241,25 @@ section .text
 		;rdx funcion 
 		push rbp
 		mov rbp, rsp
+		sub rsp, 24
+		push rbx
+		
+		mov [rbp - 8], rdi
+		mov [rbp - 16], rdx
+		mov rdi, rsi 
+		mov rsi, append
+		call fopen
+		mov rbx, rax
 		
 	.ciclo:
-		call palabraImprimir
+		
+		call [rbp - 16]
 	.fin:
 	
-	
+		mov rdi, rbx
+		call fclose
+		pop rbx
+		add rsp, 24
 		pop rbp
 		ret
 
