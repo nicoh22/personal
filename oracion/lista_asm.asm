@@ -24,6 +24,7 @@
 	extern insertarAtras
 	extern malloc
 	extern fprintf
+	extern free
 ; /** DEFINES **/    >> SE RECOMIENDA COMPLETAR LOS DEFINES CON LOS VALORES CORRECTOS
 	%define NULL 		0
 	%define TRUE 		1
@@ -174,8 +175,10 @@ section .text
 		mov rdi, NODO_SIZE
 		call malloc ; rax *nodo
 		
-		
-		
+		mov qword [rax + OFFSET_SIGUIENTE], NULL
+		mov [rax + OFFSET_PALABRA], rbx
+		pop rbx
+		add rsp, 8
 		pop rbp
 		ret
 
@@ -190,16 +193,61 @@ section .text
 		
 	; lista *oracionCrear( void );
 	oracionCrear:
-		; COMPLETAR AQUI EL CODIGO
-
+		; void
+		push rbp
+		mov rbp, rsp
+		
+		mov rdi, LISTA_SIZE
+		call malloc
+		
+		mov [rax + OFFSET_PRIMERO], NULL
+		pop rbp
+		ret
+		
 	; void oracionBorrar( lista *l );
 	oracionBorrar:
-		; COMPLETAR AQUI EL CODIGO
-
+		; rdi lista
+		push rbp
+		mov rbp, rsp
+		push rbx
+		push r12
+		
+		mov rbx, rdi
+		mov r12, [rbx + OFFSET_PRIMERO]
+		
+	.ciclo:
+		cmp r12, NULL
+		je .fin
+		mov rdi, r12
+		mov r12, [r12 + OFFSET_SIGUIENTE]
+		call nodoBorrar
+		jmp .ciclo
+	
+	.fin:
+		mov rdi, rbx
+		call free
+		pop r12
+		pop rbx
+		pop rbp
+		ret
+		
+		
+		
 	; void oracionImprimir( lista *l, char *archivo, void (*funcImprimirPalabra)(char*,FILE*) );
 	oracionImprimir:
-		; COMPLETAR AQUI EL CODIGO
-
+		;rdi lista 
+		;rsi *char
+		;rdx funcion 
+		push rbp
+		mov rbp, rsp
+		
+	.ciclo:
+		call palabraImprimir
+	.fin:
+	
+	
+		pop rbp
+		ret
 
 ;/** FUNCIONES AVANZADAS **/
 ;-----------------------------------------------------------

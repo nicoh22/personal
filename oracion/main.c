@@ -17,9 +17,14 @@ int main (void){
 	
 	FILE *archivo = fopen("/dev/stdout", "a");
 	palabraImprimir("Casa, arbol!", archivo); //File pointer!
-	fclose(archivo);
+	
 	char* p = palabraCopiar("palabrita");
-	printf("%s\n", p);
+	palabraImprimir(p, archivo);
 	free(p);
+	
+	nodo* n = nodoCrear("Buenos dias");
+	palabraImprimir(n->palabra, archivo); 
+	nodoBorrar(n);
+	fclose(archivo);
 	return 0;
 }
