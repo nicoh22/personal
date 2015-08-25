@@ -241,8 +241,9 @@ section .text
 		;rdx funcion 
 		push rbp
 		mov rbp, rsp
-		sub rsp, 24
+		sub rsp, 16
 		push rbx
+		push r12
 		
 		mov [rbp - 8], rdi
 		mov [rbp - 16], rdx
@@ -252,12 +253,18 @@ section .text
 		mov rbx, rax
 		
 	.ciclo:
-		
+		cmp r12, NULL
+		je .fin
+		mov rdi, r12
+		mov rsi, rbx
 		call [rbp - 16]
+		mov r12, [r12 + OFFSET_SIGUIENTE]
+		jmp .ciclo
+		
 	.fin:
-	
 		mov rdi, rbx
 		call fclose
+		
 		pop rbx
 		add rsp, 24
 		pop rbp
