@@ -188,7 +188,16 @@ section .text
 		; COMPLETAR AQUI EL CODIGO
 		push rbp
 		mov rbp, rsp
+		sub rsp, 8
+		push rbx
+		mov rbx, rdi
+		 
+		mov rdi, [rdi + OFFSET_PALABRA] 
 		call free
+		
+		mov rdi, rbx
+		call free
+		
 		pop rbp
 		ret
 		
