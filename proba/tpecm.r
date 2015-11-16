@@ -30,3 +30,4 @@ estimMO<-function(n, theta){
 	ecm
 }
 
+
