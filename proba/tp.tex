@@ -5,16 +5,15 @@
 \usepackage{graphicx}
 %\usepackage{makeidx}
 
-%\usepackage{float}
-\usepackage{amsmath, amsthm, amssymb}
-\usepackage{amsfonts}
-%\usepackage{sectsty}
-%\usepackage{charter}
-%\usepackage{wrapfig}
-\usepackage{array}
-
 
 \begin{document}
+\section*{Trabajo Pratico de R}
+Integrantes: \\
+\begin{itemize}
+	\item Hernandez, Nicolas Carlos (122/13)
+	\item Arrondo, Brian Ariel
+\end{itemize}
+
 \begin{table}[h!]
 	\begin{tabular}{|l | c | c | c |}
 		\hline
@@ -54,11 +53,11 @@
 		\hline
 		 & $\theta = 1$ & $\theta = 10$ & $\theta = 40$  \\
 		\hline 
-		n = 5 & & & \\
+		n = 5 & 0.0495 & 4.9555 & 79.2895\\
 		\hline
-		n = 30 & & & \\
+		n = 30 & 0.0019 & 0.1975 & 3.1611\\
 		\hline
-		n = 60 & & & \\
+		n = 60 & 0.0005 & 0.0564 & 0.9028\\
 		\hline
 	\end{tabular}
 \end{table}
@@ -70,14 +69,47 @@
 		\hline
 		 & $\theta = 1$ & $\theta = 10$ & $\theta = 40$  \\
 		\hline 
-		n = 5 & & & \\
+		n = 5 & 0.0699 & 6.9914 & 111.8639\\
 		\hline
-		n = 30 & & & \\
+		n = 30 & 0.0103 & 1.0380 & 16.6084\\
 		\hline
-		n = 60 & & & \\
+		n = 60 & 0.0054 & 0.5425 & 8.6807\\
 		\hline
 	\end{tabular}
 \end{table}
+\newpage
+\begin{table}[h!]
+	\begin{tabular}{|l | c | c |}
+		\hline
+		\multicolumn{3}{|c|}{IC exacto} \\	
+		\hline
+		 & L.E.T. & L.E.E\\
+		\hline 
+		n = 5 & 0.6752 & 0.6725\\
+		\hline
+		n = 30 & 0.0999 & 0.0999\\
+		\hline
+		n = 60 & 0.0495 & 0.0494\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+	\begin{tabular}{|l | c | c |}
+		\hline
+		\multicolumn{3}{|c|}{IC asint\`otico} \\	
+		\hline
+		 & L.E.T. & L.E.E\\
+		\hline 
+		n = 5 & 0.8520 & 0.8375\\
+		\hline
+		n = 30 & 0.3478 & 0.3469\\
+		\hline
+		n = 60 & 0.2459 & 0.2450\\
+		\hline
+	\end{tabular}
+\end{table}
+
 
 \end{document}
 
