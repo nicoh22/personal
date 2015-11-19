@@ -13,7 +13,7 @@ class Stack{
 		~Stack();
 		void Push(const T& elem);
 		const T Pop(); //saca de la pila y retorna el elemento
-		void Show(ostream os);
+		void Show(std::ostream);
 		const Nat cantElem();
 		
 	private:
@@ -60,7 +60,7 @@ const T Stack<T>::Pop(){
 }
 
 template <typename T>
-void Stack<T>::Show(ostream os){
+void Stack<T>::Show(std::ostream& os){
 	while(cantElem() > 0){
 		T dato = Pop();
 		os << dato << "\n";
