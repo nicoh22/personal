@@ -1,0 +1,24 @@
+
+
+# Codigo compilado
+*.o
+*.bin
+diskette.img
+
+# Auxiliares Latex 
+*.aux
+*.log
+*.synctex.gz
+*.toc
+
+# Otros
+*.pdf
+*core
+*.tmp
+*.ctsko
+kernel.sym
+*.ctsk
+*.tsko
+*.tsk
+*.swp
+
