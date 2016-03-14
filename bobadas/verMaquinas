@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# verMaquinas
+#
+#       Muestra el estado de las máquinas según el último registro creado por 'isMachineAlive'
+#
+# 2013.03.05 - Versión inicial
+#
+
+maxMaquinas=25                          # Cantidad máxima de máquinas
+prefijoMaq="ws"                         # Prefijo usado para armar los nombres de las máquinas
+maxLabos=7                              # Cantidad máxima de laboratorios
+prefijoLabo="labo"                      # Prefijo usado para armar los nombres de los laboratorios
+log=`tail -1 /var/log/maquinas.log`     # Leemos la última fila del archivo de logs
+fecha=`echo $log | cut -d" " -f1,2`     # Extraemos la fecha y hora del log
+estados=`echo $log | cut -d" " -f3`     # Extraemos el string con los estados de las máquinas
+
+echo -e "Estado de máquinas actualizado al \e[1;32m$fecha\e[0m\n"
+
+for((cont1 = 1; cont1 <= $maxLabos; cont1++)) {
+    fila+="  $prefijoLabo$cont1"
+}
+
+echo -e "      $fila"
+
+for((cont1 = 1; cont1 <= maxMaquinas; cont1++)) {
+    fila="$prefijoMaq$cont1"
+    fila=`printf "%-4s" $fila`
+
+    for((cont2 = 1; cont2 <= maxLabos; cont2++)) {
+        estado=${estados:$(( (cont1 - 1) + ((cont2 - 1) * 25) )):1}
+
+        if [ "$estado" == "L" ]; then
+            fila+="      \e[1;31mL\e[0m"
+        elif [ "$estado" == "W" ]; then
+            fila+="      \e[1;34mW\e[0m"
+        elif [  "$estado" == "X" ]; then
+            fila+="      X"
+        else
+            fila+="      -"
+        fi
+    }
+
+    if [ $cont1 == 1 ]; then
+        echo -e "$fila        \e[1;37mReferencias\e[0m"
+    elif [ $cont1 == 3 ]; then
+        echo -e "$fila        \e[1;31mL\e[0m: Corriendo Linux"
+    elif [ $cont1 == 4 ]; then
+        echo -e "$fila        \e[1;34mW\e[0m: Corriendo Windows"
+    elif [ $cont1 == 5 ]; then
+        echo -e "$fila        X: No responde"
+    elif [ $cont1 == 6 ]; then
+        echo -e "$fila        -: Inexistente"
+    elif [ $cont1 == 8 ]; then 
+        echo -e "$fila        Para ingresar a un equipo se debe armar el nombre"
+    elif [ $cont1 == 9 ]; then 
+        echo -e "$fila        de la siguiente manera:"
+    elif [ $cont1 == 11 ]; then 
+        echo -e "$fila          ws0.labo0.lab.dc.uba.ar"
+    elif [ $cont1 == 13 ]; then 
+        echo -e "$fila        Por ejemplo, para ingresar a la máquina 12 del labo 6 "
+    elif [ $cont1 == 15 ]; then 
+        echo -e "$fila          ~\$ ssh ws12.labo6.lab.dc.uba.ar"
+    else
+        echo -e "$fila"
+    fi
+}
+
+exit 0

@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# isMachineAlive
+#
+#       Chequea qué maquinas de los laboratorios están encendidas y con qué sistema operativo. Guarda los resultados en un archivo de logs
+#
+# 2013.03.05 - Versión inicial
+#
+
+maxMaquinas=25                          # Cantidad máxima de máquinas
+prefijoMaq="ws"                         # Prefijo usado para armar los nombres de las máquinas
+maxLabos=7                              # Cantidad máxima de laboratorios
+prefijoLabo="labo"                      # Prefijo usado para armar los nombres de los laboratorios
+logFile=/var/log/maquinas.log           # Archivo donde se guardan los resultados
+logLine=`date "+%d/%m/%Y %H:%M:%S "`    # La fila comienza con la fecha y hora en que se obtuvieron los datos
+
+# Armo un doble loop con el número de labo y el número de máquina
+for((cont1 = 1; cont1 <= $maxLabos; cont1++)) {
+    for((cont2 = 1; cont2 <= $maxMaquinas; cont2++)) {
+        # Intentamos pinguear la máquina con un solo intento (-c 1) y un timeout de 1 segundo (-w 1)
+        host="$prefijoMaq$cont2.$prefijoLabo$cont1.lab.dc.uba.ar"
+        respuesta=`ping -c 1 -w 1 $host 2>&1`
+        resultado=$?
+        respuesta=`echo "$respuesta" | grep ttl`
+
+        if [ "$resultado" == "0" ]; then
+            # La máquina respondió al ping; obtengo el valor del TTL para determinar si se trata de un equipo con Windows o Linux
+            ttl=`echo $respuesta | awk '{print $7}' | cut -d= -f2`
+
+            # De acuerdo al valor del TTL, agrego una 'W' o una 'L' en la posicion que corresponde a la máquina
+            [ "$ttl" == "127" ] && logLine+="W" || logLine+="L"
+        elif [ "$resultado" == "2" ]; then
+            # La máquina no existe, agrego un '-' en la posición que le corresponde
+            logLine+="-"
+        else
+            # La máquina no responde, agrego una 'X' en la posición que le corresponde
+            logLine+="X"
+        fi
+    }
+}
+
+# Guardo los resultados en el log
+echo $logLine >> $logFile
+
+exit 0
