@@ -1,0 +1,18 @@
+#!/bin/bash
+#                 1         2         3         4         5         6         7         8
+#        12345678901234567890123456789012345678901234567890123456789012345678901234567890
+echo -e "\e[1;31mATENCION\e[0m"
+echo -e " Ingresaste al nuevo servidor de acceso remoto del Departamento de Computación."
+echo -e " Con el objetivo de mejorar el servicio implementamos algunos cambios."
+echo -e " El principal es que desde ahora tanto las cuentas de los laboratorios como las"
+echo -e " cuentas de \e[1;32mmilagro\e[0m comparten el home. El contenido del home del viejo"
+echo -e " \e[1;32mmilagro\e[0m fue movido a un directorio en tu home actual cuyo nombre comienza con"
+echo -e " la palabra 'milagro'."
+echo -e " Otro cambio consiste en un conjunto de scripts que monitorea permanentemente"
+echo -e " el estado de las máquinas de los laboratorios. Para verlo simplemente tenés"
+echo -e " que ejecutar 'verMaquinas'."
+echo -e " Si te interesa, podés ver los scripts en /usr/local/bin."
+echo -e " Si tenés alguna duda, sugerencia o encontraste algún error podés escribirnos"
+echo -e " a \e[1;37msoporte-tecnico@dc.uba.ar\e[0m.\n" 
+
+sleep 1

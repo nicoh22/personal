@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# backup
+#
+#       Genera una copia del archivo indicado agregando un timestamp al nombre
+#
+# 2010.08.03 - Primera versión
+# 2010.12.02 - Modificado para detectar sobre que sistema operativo se está corriendo (Linux u OpenBSD), para poder correr los comandos adecuados
+# 2012.05.24 - Modificado para detectar si se corre en un sistema operativo desconocido
+
+# Controlo si se indicó un nombre de archivo y, en caso que sí, si se trata de un nombre de archivo válido
+if [ "$1" == "" ]; then
+    echo -e "ERROR: No se indicó el nombre de ningún archivo\n"
+    exit 1
+elif [ ! -f $1 ]; then
+    echo -e "ERROR: No existe el archivo \"$1\"\n"
+    exit 1
+fi
+
+sistemaOperativo=`uname`        # Nombre del sistema operativo en el que estoy corriendo
+
+# El comando cambia si se ejecuta en Linux u OpenBSD
+if [ $sistemaOperativo = "Linux" ]; then
+    cp -a $1 $1.`date +%Y%m%d%H%M`
+elif [ $sistemaOperativo = "OpenBSD" ]; then
+    cp -p $1 $1.`date +"%Y%m%d%H%M"`
+else
+    echo -e "ERROR: Sistema operativo desconocido\n"
+    exit 1
+fi
+
+exit 0

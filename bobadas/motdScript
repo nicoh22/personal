@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# motdScript
+#
+#       Script de reemplazo de /etc/motd que muestra información útil al loguearse al sistema
+#
+# 2013.01.21 - Versión inicial
+#
+
+# El banner lo generé ejecutando "toilet --font nscript milagro | base64 --wrap=0"
+banner="ICAgICAgICAgICAgICAgICAgIG84byAgb29vbyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgYCInICBgODg4ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCm9vby4gLm9vLiAgLm9vLiAgIG9vb28gICA4ODggICAub29vby4gICAgLm9vb29vb29vIG9vb28gZDhiICAub29vb28uICAKYDg4OFAiWTg4YlAiWTg4YiAgYDg4OCAgIDg4OCAgYFAgICk4OGIgIDg4OCcgYDg4YiAgYDg4OCIiOFAgZDg4JyBgODhiIAogODg4ICAgODg4ICAgODg4ICAgODg4ICAgODg4ICAgLm9QIjg4OCAgODg4ICAgODg4ICAgODg4ICAgICA4ODggICA4ODggCiA4ODggICA4ODggICA4ODggICA4ODggICA4ODggIGQ4KCAgODg4ICBgODhib2Q4UCcgICA4ODggICAgIDg4OCAgIDg4OCAKbzg4OG8gbzg4OG8gbzg4OG8gbzg4OG8gbzg4OG8gYFk4ODgiIjhvIGA4b29vb29vLiAgZDg4OGIgICAgYFk4Ym9kOFAnIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZCIgICAgIFlEICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiWTg4ODg4UCcgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAo="
+
+# Obtengo el uptime de la máquina
+uptime=`cat /proc/uptime | cut -d. -f1`
+uptimeDias=$(( uptime / 86400 ))
+uptimeHoras=$(( (uptime - (uptimeDias * 86400)) / 3600 ))
+uptimeMinutos=$(( (uptime - (uptimeDias * 86400) - (uptimeHoras * 3600)) / 60 ))
+
+# Obtengo la cantidad de procesos que tiene corriendo el usuario y el límite
+# A la cantidad de procesos corriendo le resto 3 que es la cantidad de procesos necesarios para determinar la cantidad de procesos corriendo :P
+procesos=$(( `pgrep -u $(whoami) | wc -l` - 3 ))
+procesosL=`ulimit -u`
+[ "$procesosL" == "unlimited" ] && procesosL="ilimitado"
+
+# Obtengo los datos de la quota de disco
+[ "`quota -s | awk '{print $8}'`" == "none" ] && quota="ILIMITADA" || quota=`quota -s | tail -1 | awk '{print $3}' | cut -dM -f1`
+quotaUsada=`quota -s | awk '{print $1}' | tail -1 | cut -dM -f1`
+
+# Muestro toda la información recolectada
+echo -e "\e[1;32m"
+echo $banner | base64 --decode
+[ -f /usr/local/bin/mensajeEspecial ] && /usr/local/bin/mensajeEspecial
+echo -e "\e[1;31mADVERTENCIA\e[0m"
+echo -e " Ingresaste al servidor de login remoto de alumnos del Departamento de"
+echo -e " Computación. Este equipo sólo debe ser utilizado para acceder a la red de"
+echo -e " laboratorios; no se permite realizar pruebas de TPs u otros programas en él.\n"
+echo -e "\e[1;31mINFORMACION\e[0m"
+echo -e "          Sistema : \e[1;34mDebian GNU/Linux "`cat /etc/debian_version`"\e[0m"
+echo -e "           Kernel : \e[1;34m"`uname --kernel-name --kernel-release`"\e[0m"
+echo -e "           Uptime : \e[1;34m"$uptimeDias"d "$uptimeHoras"h "$uptimeMinutos"m\e[0m"
+echo -e "    Memoria libre : \e[1;34m"`free -m | grep Mem: | awk '{print $4}'`" / "`free -m | grep Mem: | awk '{print $2}'`" MB\e[0m\n"
+echo -e "          Usuario : \e[1;34m"`whoami`"\e[0m"
+echo -e " Procesos activos : \e[1;34m$procesos / $procesosL\e[0m"
+[ "$quota" == "ILIMITADA" ] && echo -e "   Quota de disco : \e[1;34mILIMITADA\e[0m\n" || echo -e "   Quota de disco : \e[1;34m$quotaUsada / $quota MB\e[0m\n"
+echo -e "\e[1;31mCOMANDOS ÚTILES\e[0m"
+echo -e " \e[1;37mverMaquinas\e[0m   Muestra el estado de las máquinas de los laboratorios\n"
+
+exit 0
