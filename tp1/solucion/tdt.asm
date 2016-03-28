@@ -80,8 +80,29 @@ tdt_agregarBloque:
 
 ; =====================================:
 ; void tdt_agregarBloques(tdt* tabla, bloque** b)
+
 tdt_agregarBloques:
-        
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push r12
+	mov rbx, rdi ; *tdt
+	mov r12, rsi ; **bloque
+.ciclo:
+	mov rcx, [r12]
+	cmp rcx, 0
+	je .break
+	mov rdi, rbx
+	mov rsi, rcx
+	call tdt_agregarBloque
+	add r12, 8
+	jmp .ciclo
+.break:
+	pop r12
+	pop rbx
+	pop rbp
+	ret
+ 
 ; =====================================
 ; void tdt_borrarBloque(tdt* tabla, bloque* b)
 tdt_borrarBloque:
@@ -91,6 +112,26 @@ tdt_borrarBloque:
 ; void tdt_borrarBloques(tdt* tabla, bloque** b)
 tdt_borrarBloques:
         
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push r12
+	mov rbx, rdi ; *tdt
+	mov r12, rsi ; **bloque
+.ciclo:
+	mov rcx, [r12]
+	cmp rcx, 0
+	je .break
+	mov rdi, rbx
+	mov rsi, rcx
+	call tdt_borrarBloque
+	add r12, 8
+	jmp .ciclo
+.break:
+	pop r12
+	pop rbx
+	pop rbp
+	ret
 ; =====================================
 ; void tdt_traducir(tdt* tabla, uint8_t* clave, uint8_t* valor)
 tdt_traducir:
@@ -102,8 +143,28 @@ tdt_traducirBloque:
 	jmp tdt_traducir
 ; =====================================
 ; void tdt_traducirBloques(tdt* tabla, bloque** b)
-tdt_traducirBloques:
-        
+tdt_traducirBloques:        
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push r12
+	mov rbx, rdi ; *tdt
+	mov r12, rsi ; **bloque
+.ciclo:
+	mov rcx, [r12]
+	cmp rcx, 0
+	je .break
+	mov rdi, rbx
+	mov rsi, rcx
+	call tdt_traducirBloque
+	add r12, 8
+	jmp .ciclo
+.break:
+	pop r12
+	pop rbx
+	pop rbp
+	ret
+
 ; =====================================
 ; void tdt_destruir(tdt** tabla)
 tdt_destruir:
