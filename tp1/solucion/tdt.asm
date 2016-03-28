@@ -37,6 +37,7 @@ tdt_crear:
 ;	
 	call longString
 	mov rdi, rax
+	inc rdi		;longitud del string + caracter terminacion
 	call malloc
 	mov rdi, rax
 	pop rsi
@@ -52,15 +53,15 @@ tdt_crear:
 	add rsp, 8
 	pop rdi
 	mov [rax + TDT_OFFSET_IDENTIFICACION], rdi
- 	mov qword [rax + TDT_OFFSET_PRIMERA], NULL
+ 	mov qword [rax + TDT_OFFSET_PRIMERA], 0 
 	mov dword [rax + TDT_OFFSET_CANTIDAD], 0 
 	
 	pop rbp
 	ret
 
-;TODO tengo que copiar el string identificacion?	
+;TODO tengo que copiar el string identificacion? DONE	
 ; Si para algo esta strcpy definida arriba
-;TODO implementar longString
+;TODO implementar longString DONE
 
 ; =====================================
 ; void tdt_recrear(tdt** tabla, char* identificacion)
@@ -77,7 +78,7 @@ tdt_agregarBloque:
 	lea rdx, [rsi + 3]
 	jmp tdt_agregar 
 
-; =====================================
+; =====================================:
 ; void tdt_agregarBloques(tdt* tabla, bloque** b)
 tdt_agregarBloques:
         
@@ -107,4 +108,19 @@ tdt_traducirBloques:
 ; void tdt_destruir(tdt** tabla)
 tdt_destruir:
 
+; =======AUXILIARES=======
+
+longString:
+	;rdi *string
+
+	xor rax, rax
+.ciclo:
+	cmp byte [rdi + rax], 0
+	je .break
+	inc rax
+.break:
+	ret
+
+; esto devuelve la longitud del string sin contar el 
+; caracter de terminacion de string (0)
 
