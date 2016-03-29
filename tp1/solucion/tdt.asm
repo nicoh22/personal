@@ -59,19 +59,17 @@ tdt_crear:
 	pop rbp
 	ret
 
-;TODO tengo que copiar el string identificacion? DONE	
-; Si para algo esta strcpy definida arriba
-;TODO implementar longString DONE
-
 ; =====================================
 ; void tdt_recrear(tdt** tabla, char* identificacion)
 tdt_recrear:
+
 	
 ; =====================================
 ; uint32_t tdt_cantidad(tdt* tabla)
 tdt_cantidad:
 	mov rax, [rdi + TDT_OFFSET_CANTIDAD]
 	ret
+
 ; =====================================
 ; void tdt_agregarBloque(tdt* tabla, bloque* b)
 tdt_agregarBloque:
