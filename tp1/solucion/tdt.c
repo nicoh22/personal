@@ -18,7 +18,7 @@ void tdt_agregar(tdt* tabla, uint8_t* clave, uint8_t* valor) {
 		segNivel->entradas[clave[2]] = malloc(256*16);
 	//TODO: poner los campos "valido" en NULL
 	}
-	int8_t *valorInterno = tercNivel->entradas[clave[3]].valor.val;
+	uint8_t *valorInterno = tercNivel->entradas[clave[3]].valor.val;
 	int i = 0;
 	while (i<15){
 		valorInterno[i] = valor[i];

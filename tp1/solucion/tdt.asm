@@ -133,6 +133,25 @@ tdt_borrarBloques:
 ; =====================================
 ; void tdt_traducir(tdt* tabla, uint8_t* clave, uint8_t* valor)
 tdt_traducir:
+	; rdi *tabla, rsi *clave, rdx *valor
+	push rbp
+	mov rbp, rsp
+	xor rax, rax
+	mov rbx, [rdi + TDT_OFFSET_PRIMERA]; *tdtN1
+	
+	mov al, [rsi]
+	mov rbx, [rbx + rax*8]; *tdtN2
+	
+	mov al, [rsi + 1]
+	mov rbx, [rbx + rax*8]; *tdtN3
+	
+	
+	mov al, [rsi + 2]
+	shl rax, 1
+	lea rbx, [rbx + rax*8]; *valorvalido
+
+	pop rbp
+	ret
         
 ; =====================================
 ; void tdt_traducirBloque(tdt* tabla, bloque* b)
