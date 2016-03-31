@@ -23,7 +23,7 @@
   %define TDT_OFFSET_PRIMERA          8
   %define TDT_OFFSET_CANTIDAD        16
   %define TDT_SIZE                   20
-
+  %define VALOR_OFFSET_VALIDO	     15 
 section .text
 
 ; =====================================
@@ -62,7 +62,8 @@ tdt_crear:
 ; =====================================
 ; void tdt_recrear(tdt** tabla, char* identificacion)
 tdt_recrear:
-
+	
+	
 	
 ; =====================================
 ; uint32_t tdt_cantidad(tdt* tabla)
@@ -136,6 +137,8 @@ tdt_traducir:
 	; rdi *tabla, rsi *clave, rdx *valor
 	push rbp
 	mov rbp, rsp
+	push rbx
+
 	xor rax, rax
 	mov rbx, [rdi + TDT_OFFSET_PRIMERA]; *tdtN1
 	
@@ -149,7 +152,19 @@ tdt_traducir:
 	mov al, [rsi + 2]
 	shl rax, 1
 	lea rbx, [rbx + rax*8]; *valorvalido
-
+	
+	cmp byte [rbx + VALOR_OFFSET_VALIDO], 0
+	je .fin
+	xor rcx, rcx	
+.ciclo:	
+	cmp rcx, 15
+	jge .fin
+	mov al, [rbx + rcx]
+	mov [rdx + rcx], al
+	inc rcx
+	jmp .ciclo
+.fin: 
+	pop rbx
 	pop rbp
 	ret
         
