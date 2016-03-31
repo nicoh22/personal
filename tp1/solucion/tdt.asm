@@ -185,6 +185,19 @@ tdt_traducirBloques:
 ; =====================================
 ; void tdt_destruir(tdt** tabla)
 tdt_destruir:
+	;rdi **tabla
+	push rbp
+	mov rbp, rsp
+	push rbx
+	push r12
+	push r13
+
+	mov rbx, rdi
+	
+	mov r12, [rbx + TDT_OFFSET_PRIMERA]
+
+.primNivel:	
+
 
 ; =======AUXILIARES=======
 
