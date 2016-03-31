@@ -24,6 +24,8 @@
   %define TDT_OFFSET_CANTIDAD        16
   %define TDT_SIZE                   20
   %define VALOR_OFFSET_VALIDO	     15 
+  %define NULL	0
+
 section .text
 
 ; =====================================
@@ -142,12 +144,20 @@ tdt_traducir:
 	xor rax, rax
 	mov rbx, [rdi + TDT_OFFSET_PRIMERA]; *tdtN1
 	
+	cmp rbx, NULL
+	je .fin
+	
 	mov al, [rsi]
 	mov rbx, [rbx + rax*8]; *tdtN2
+	
+	cmp rbx, NULL
+	je .fin
 	
 	mov al, [rsi + 1]
 	mov rbx, [rbx + rax*8]; *tdtN3
 	
+	cmp rbx, NULL
+	je .fin
 	
 	mov al, [rsi + 2]
 	shl rax, 1
