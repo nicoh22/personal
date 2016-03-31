@@ -188,16 +188,57 @@ tdt_destruir:
 	;rdi **tabla
 	push rbp
 	mov rbp, rsp
+	sub rsp, 24
 	push rbx
 	push r12
 	push r13
 
 	mov rbx, rdi
 	
-	mov r12, [rbx + TDT_OFFSET_PRIMERA]
+	xor r12, r12
+	xor r13, r13
+	xor r14, r14
 
-.primNivel:	
+.tercNivel:
+	
+	xor rax, rax
+	mov al, r12b
+	shl rax, 1
+	mov al, r13b
+	shl rax, 1
+	mov al, r14b
+	
+	mov [rbp + 24], rax
+	
+	mov rdi, rbx
+	lea rsi, [rbp + 24]
+	call tdt_borrar
 
+	inc r14
+	cmp r14, 255
+	je .segNivel
+	jmp .tercNivel
+
+.segNivel:
+	xor r14, r14
+	inc r13
+	cmp r13, 255
+	je .primNivel	
+	jmp .tercNivel
+
+.primNivel:
+	xor r13, r13
+	inc r12
+	cmp r12, 255
+	je .fin
+	jmp .tercNivel
+	
+.fin:
+	mov rdi, rbx	
+	call free
+
+	pop rbp
+	ret
 
 ; =======AUXILIARES=======
 
