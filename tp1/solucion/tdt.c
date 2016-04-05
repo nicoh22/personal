@@ -43,14 +43,62 @@ void tdt_agregar(tdt* tabla, uint8_t* clave, uint8_t* valor) {
 }
 
 void tdt_borrar(tdt* tabla, uint8_t* clave) {
+//se le puede pasar cualquier clave, se encuentre en la tabla o no
+
+	tdtN1* primNivel = tabla->primera;
+	if(primNivel == NULL){ return; } //no hay tabla, la clave no esta
+	
+	tdtN2* segNivel = primNivel->entradas[clave[0]]; 
+	if(segNivel == NULL){ return; } //no hay tabla, la clave no esta
+	
+	tdtN3* tercNivel = segNivel->entradas[clave[1]]; 
+	if(tercNivel == NULL){ return; } //no hay tabla, la clave no esta
+	
+	if(!tercNivel->entradas[clave[2]].valido){ return; }
+
 	tabla->cantidad--;
+	tercNivel->entradas[clave[2]].valido = 0;
+	
+	int i = 0; 
+	while( i < 256 ) {	
+		if(tercNivel->entradas[i].valido){	break; }
+		i++;
+	}	
+	
+	if(i == 256){//no encontre valores validos
+		free(tercNivel);
+		segNivel->entradas[clave[1]] = NULL;
+		int j = 0;
+		while( j < 256) {
+			if(segNivel->entradas[clave[j]] != NULL){ break; }
+			j++;
+		}
+		if(j == 256){
+			free(segNivel);
+			primNivel->entradas[clave[0]] = NULL; 
+			int k = 0;
+			while( k < 256) {
+				if(primNivel->entradas[clave[k]] != NULL){ break; }
+				k++;
+			}
+			if(k == 256){
+				free(primNivel);
+				tabla->primera = NULL;
+			}
+		}
+	}
+
 }
+
+
 
 void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 
 	fprintf(pFile, "- %s  -\n", tabla->identificacion);
 	tdtN1* primNivel = tabla->primera;
 	int clave[3];
+	
+	if(primNivel == NULL){return;} //no hay ninguna tabla
 
 	for(int i = 0; i < 256; i++) {	
 		if(primNivel->entradas[i] != NULL){
@@ -85,7 +133,6 @@ void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 		}
 	}
 	//todo ese codigo repetido dios
-	
 }
 
 maxmin* tdt_obtenerMaxMin(tdt* tabla) {

@@ -34,39 +34,69 @@ tdt_crear:
 	;rdi *identificacion
 	push rbp
 	mov rbp, rsp
-	sub rsp, 8
-	push rdi 
-;	
+	push rbx
+	push r12
+	mov rbx, rdi ; *identificacion
+
 	call longString
 	mov rdi, rax
 	inc rdi		;longitud del string + caracter terminacion
 	call malloc
-	mov rdi, rax
-	pop rsi
-	add rsp, 8
+	mov r12, rax
+	
+	mov rdi, r12
+	mov rsi, rbx
+
 	call strcpy 
-
-	push rax	
-	sub rsp, 8
-
+	
 	mov rdi, TDT_SIZE	
 	call malloc
 	;rax *tdt
-	add rsp, 8
-	pop rdi
-	mov [rax + TDT_OFFSET_IDENTIFICACION], rdi
- 	mov qword [rax + TDT_OFFSET_PRIMERA], 0 
-	mov dword [rax + TDT_OFFSET_CANTIDAD], 0 
+	mov [rax + TDT_OFFSET_IDENTIFICACION], r12 
+ 	mov qword [rax + TDT_OFFSET_PRIMERA], NULL 
+	mov dword [rax + TDT_OFFSET_CANTIDAD], NULL
 	
+	
+	pop r12
+	pop rbx
 	pop rbp
 	ret
 
 ; =====================================
 ; void tdt_recrear(tdt** tabla, char* identificacion)
 tdt_recrear:
+	push rbp	
+	mov rbp, rsp
+	push rbx
+	push r12
+
+	mov rbx, rdi; **tabla
+	mov r12, rsi; *identificacion
 	
+	mov rdi, [rbx]
+	call borrarTodasLasClaves
 	
+	cmp r12, NULL
+	je .usarIdentAnterior
+	mov rdi, r12
+	jmp .crear
+.usarIdentAnterior:
+	mov rax, [rbx]
+	mov rdi, [rax + TDT_OFFSET_IDENTIFICACION]
+.crear:
+	call tdt_crear
+	mov r12, rax
+
+	mov rdi, [rbx] ; termino de destruir la tdt anterior
+	call free
+
+	mov [rbx], r12
+
 	
+	pop r12
+	pop rbx
+	pop rbp
+	ret
 ; =====================================
 ; uint32_t tdt_cantidad(tdt* tabla)
 tdt_cantidad:
@@ -213,30 +243,80 @@ tdt_destruir:
 	;rdi **tabla
 	push rbp
 	mov rbp, rsp
-	sub rsp, 24
+	push rbx
+        
+    sub rsp, 8  
+	
+	mov rbx, [rdi]	
+	mov rdi, [rdi]
+	call borrarTodasLasClaves
+      
+.fin:
+	mov rdi, [rbx + TDT_OFFSET_IDENTIFICACION]	
+	call free
+        
+	mov rdi, rbx
+	call free
+    
+    sub rsp, 8
+    pop r14
+    pop r13
+	pop r12
+	pop rbp
+	ret
+
+; =======AUXILIARES=======
+
+longString:
+; esto devuelve la longitud del string sin contar el 
+; caracter de terminacion de string (0)
+
+	;rdi *string
+	xor rax, rax
+.ciclo:
+	cmp byte [rdi + rax], 0
+	je .break
+	inc rax
+	jmp .ciclo
+.break:
+	ret
+
+
+
+borrarTodasLasClaves:
+;Borra todas las claves existentes en una tdt    
+;pero deja intacto el struct
+
+	;rdi *tdt
+    
+	push rbp
+	mov rbp, rsp
+	sub rsp, 16
 	push rbx
 	push r12
 	push r13
+	push r14
+
 
 	mov rbx, rdi
-	
+
 	xor r12, r12
 	xor r13, r13
 	xor r14, r14
 
 .tercNivel:
-	
+
 	xor rax, rax
 	mov al, r12b
 	shl rax, 1
 	mov al, r13b
 	shl rax, 1
 	mov al, r14b
-	
-	mov [rbp + 24], rax
-	
+
+	mov [rbp], rax
+
 	mov rdi, rbx
-	lea rsi, [rbp + 24]
+	mov rsi, rbp
 	call tdt_borrar
 
 	inc r14
@@ -257,27 +337,15 @@ tdt_destruir:
 	cmp r12, 255
 	je .fin
 	jmp .tercNivel
-	
-.fin:
-	mov rdi, rbx	
-	call free
 
+.fin:
+    pop r14
+    pop r13
+	pop r12
+	pop rbx
+	add rsp, 16
 	pop rbp
 	ret
 
-; =======AUXILIARES=======
 
-longString:
-	;rdi *string
-
-	xor rax, rax
-.ciclo:
-	cmp byte [rdi + rax], 0
-	je .break
-	inc rax
-.break:
-	ret
-
-; esto devuelve la longitud del string sin contar el 
-; caracter de terminacion de string (0)
 
