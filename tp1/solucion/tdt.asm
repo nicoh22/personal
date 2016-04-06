@@ -177,7 +177,7 @@ tdt_traducir:
 	cmp rbx, NULL
 	je .fin
 	
-	mov al, [rsi]
+	mov al, [rsi + 2]
 	mov rbx, [rbx + rax*8]; *tdtN2
 	
 	cmp rbx, NULL
@@ -189,7 +189,7 @@ tdt_traducir:
 	cmp rbx, NULL
 	je .fin
 	
-	mov al, [rsi + 2]
+	mov al, [rsi]
 	shl rax, 1
 	lea rbx, [rbx + rax*8]; *valorvalido
 	
@@ -245,7 +245,7 @@ tdt_destruir:
 	mov rbp, rsp
 	push rbx
         
-    sub rsp, 8  
+	sub rsp, 8  
 	
 	mov rbx, [rdi]	
 	mov rdi, [rdi]
@@ -258,9 +258,9 @@ tdt_destruir:
 	mov rdi, rbx
 	call free
     
-    sub rsp, 8
-    pop r14
-    pop r13
+	sub rsp, 8
+	pop r14
+	pop r13
 	pop r12
 	pop rbp
 	ret
@@ -308,9 +308,9 @@ borrarTodasLasClaves:
 
 	xor rax, rax
 	mov al, r12b
-	shl rax, 1
+	shl rax, 8 
 	mov al, r13b
-	shl rax, 1
+	shl rax, 8
 	mov al, r14b
 
 	mov [rbp], rax
@@ -320,27 +320,27 @@ borrarTodasLasClaves:
 	call tdt_borrar
 
 	inc r14
-	cmp r14, 255
+	cmp r14, 256
 	je .segNivel
 	jmp .tercNivel
 
 .segNivel:
 	xor r14, r14
 	inc r13
-	cmp r13, 255
+	cmp r13, 256
 	je .primNivel	
 	jmp .tercNivel
 
 .primNivel:
 	xor r13, r13
 	inc r12
-	cmp r12, 255
+	cmp r12, 256
 	je .fin
 	jmp .tercNivel
 
 .fin:
-    pop r14
-    pop r13
+	pop r14
+	pop r13
 	pop r12
 	pop rbx
 	add rsp, 16

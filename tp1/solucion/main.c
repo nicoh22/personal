@@ -4,16 +4,15 @@
 #include <stdint.h>
 
 
-void hexToValor(uint8_t* valor, long long int hexAlta, long long int hexBaja){
-	uint8_t *alta = (uint8_t *) &hexAlta;
+void hexToValor(uint8_t* valor, long int hexAlta, long int hexBaja){
 	uint8_t *baja = (uint8_t *) &hexBaja;
+	uint8_t *alta = (uint8_t *) &hexAlta;
 	for(int i = 0; i < 8; i++){
 		valor[i] = baja[i];
 	}
 	for(int i = 0; i < 7; i++){
 		valor[i + 8] = alta[i];
 	}
-
 }
 
 int main (void){
@@ -86,6 +85,6 @@ int main (void){
 	//Ej 2.7
 	
 	//Ej 2.8
-
+	tdt_destruir(&tabla);
     return 0;    
 }
