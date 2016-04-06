@@ -79,19 +79,9 @@ tdt_recrear:
 	cmp r12, NULL
 	je .usarIdentAnterior
 	mov rdi, r12
-	jmp .crear
+	;TODO: copiar el string
+	;liberar memoria del string anterior
 .usarIdentAnterior:
-	mov rax, [rbx]
-	mov rdi, [rax + TDT_OFFSET_IDENTIFICACION]
-.crear:
-	call tdt_crear
-	mov r12, rax
-
-	mov rdi, [rbx] ; termino de destruir la tdt anterior
-	call free
-
-	mov [rbx], r12
-
 	
 	pop r12
 	pop rbx
@@ -288,7 +278,7 @@ borrarTodasLasClaves:
 ;pero deja intacto el struct
 
 	;rdi *tdt
-    
+	;TODO iterar solo por las claves que existen y no todas las posibles. 
 	push rbp
 	mov rbp, rsp
 	sub rsp, 16
