@@ -257,11 +257,16 @@ tdt_destruir:
 
 ; =======AUXILIARES=======
 
-longString:
+copyString:
 ; esto devuelve la longitud del string sin contar el 
 ; caracter de terminacion de string (0)
 
 	;rdi *string
+	push rbp
+	mov rbp, rsp
+	push rbx
+	
+	mov rbx, rdi; *string original	
 	xor rax, rax
 .ciclo:
 	cmp byte [rdi + rax], 0
@@ -269,6 +274,17 @@ longString:
 	inc rax
 	jmp .ciclo
 .break:
+	mov rdi, rax
+	inc rdi		;longitud del string + caracter terminacion
+	call malloc
+	
+	mov rdi, rax
+	mov rsi, rbx
+	
+	call strcpy
+	
+	pop rbx
+	pop rbp
 	ret
 
 
