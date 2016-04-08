@@ -27,6 +27,9 @@ int main (void){
 	fclose(salidaEstandar);
 */	
 	//Ej 2.1
+
+	
+
 	tdt* tabla = tdt_crear("pepe");
 	
 	//Ej 2.2

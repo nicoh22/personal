@@ -38,16 +38,8 @@ tdt_crear:
 	push r12
 	mov rbx, rdi ; *identificacion
 
-	call longString
-	mov rdi, rax
-	inc rdi		;longitud del string + caracter terminacion
-	call malloc
+	call copyString
 	mov r12, rax
-	
-	mov rdi, r12
-	mov rsi, rbx
-
-	call strcpy 
 	
 	mov rdi, TDT_SIZE	
 	call malloc
@@ -72,15 +64,20 @@ tdt_recrear:
 
 	mov rbx, rdi; **tabla
 	mov r12, rsi; *identificacion
-	
 	mov rdi, [rbx]
 	call borrarTodasLasClaves
 	
 	cmp r12, NULL
 	je .usarIdentAnterior
+	
 	mov rdi, r12
-	;TODO: copiar el string
-	;liberar memoria del string anterior
+	call copyString
+	
+	mov rcx, [rbx]
+	mov rdi, [rcx + TDT_OFFSET_IDENTIFICACION]
+	mov [rcx + TDT_OFFSET_IDENTIFICACION], rax
+	call free
+
 .usarIdentAnterior:
 	
 	pop r12
@@ -258,8 +255,8 @@ tdt_destruir:
 ; =======AUXILIARES=======
 
 copyString:
-; esto devuelve la longitud del string sin contar el 
-; caracter de terminacion de string (0)
+; esto devuelve un nuevo string por rax 
+; con los mismos caracteres del string recibido en rdi
 
 	;rdi *string
 	push rbp

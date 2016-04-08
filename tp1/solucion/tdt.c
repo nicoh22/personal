@@ -137,5 +137,49 @@ void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 }
 
 maxmin* tdt_obtenerMaxMin(tdt* tabla) {
-  return 0;
+	//el que me llama tiene la responsabilidad
+	//de liberar memoria
+	if(tdt_cantidad(tabla) == 0){ return NULL; } //O devolver un maxmin con NULLS?
+	maxmin* res = malloc(sizeof(maxmin));
+	uint8_t valorMaxActual[15];  
+	uint8_t valorMinActual[15];
+	//TODO inicializar los dos de arriba en 0
+	uint8_t encontreMinClave = 0;
+	tdtN1* primNivel = tabla->primera;
+	for(int i = 0; i < 256; i++) {	
+		if(primNivel->entradas[i] != NULL){
+			tdtN2* segNivel = primNivel->entradas[i]; 
+			for(int j = 0; j < 256; j++) {
+				if(segNivel->entradas[j] != NULL){
+					tdtN3* tercNivel = segNivel->entradas[j]; 
+					for(int k = 0; k < 256; k++) {
+						if(tercNivel->entradas[k].valido){
+							// si llego aca estoy en algun valor valido
+							// clave = {i,j,k}
+							if(!encontreMinClave){
+								encontreMinClave = 1;
+								res->min_clave[2] = i;
+								res->min_clave[1] = j;
+								res->min_clave[0] = k;
+							}
+							res->max_clave[2] = i;
+							res->max_clave[1] = j;
+							res->max_clave[0] = k;
+							
+							//TODO algoritmo que compara valores
+							// se compara de mas significativo a menos
+							//valor[14] < valorAct[14]
+							//lexicografico??? abc y lo demas?
+							//if(valoractual>valormax){ valormax = valoractual}	
+							//if(valoractual<valormin){ valormin = valoractual}	
+					
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+	return res;
 }
