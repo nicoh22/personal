@@ -72,7 +72,8 @@ void tdt_borrar(tdt* tabla, uint8_t* clave) {
 		segNivel->entradas[clave[1]] = NULL;
 		int j = 0;
 		while( j < 256) {
-			if( (segNivel->entradas[clave[j]]) != NULL){ break; }
+			tdtN3* unaTdtN3 = segNivel->entradas[clave[j]];
+			if( unaTdtN3 != NULL ){ break; }
 			j++;
 		}
 		if(j == 256){
@@ -80,7 +81,8 @@ void tdt_borrar(tdt* tabla, uint8_t* clave) {
 			primNivel->entradas[clave[2]] = NULL; 
 			int k = 0;
 			while( k < 256) {
-				if(primNivel->entradas[clave[k]] != NULL){ break; }
+				tdtN2* unaTdtN2 = primNivel->entradas[clave[k]];
+				if( unaTdtN2 != NULL ){ break; }
 				k++;
 			}
 			if(k == 256){
@@ -141,11 +143,9 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 	//de liberar memoria
 	if(tdt_cantidad(tabla) == 0){ return NULL; } //O devolver un maxmin con NULLS?
 	maxmin* res = malloc(sizeof(maxmin));
-	uint8_t valorMaxActual[15];  
-	uint8_t valorMinActual[15];
-	//TODO inicializar los dos de arriba en 0
 	uint8_t encontreMinClave = 0;
 	tdtN1* primNivel = tabla->primera;
+	
 	for(int i = 0; i < 256; i++) {	
 		if(primNivel->entradas[i] != NULL){
 			tdtN2* segNivel = primNivel->entradas[i]; 
@@ -166,13 +166,27 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 							res->max_clave[1] = j;
 							res->max_clave[0] = k;
 							
-							//TODO algoritmo que compara valores
-							// se compara de mas significativo a menos
-							//valor[14] < valorAct[14]
-							//lexicografico??? abc y lo demas?
-							//if(valoractual>valormax){ valormax = valoractual}	
-							//if(valoractual<valormin){ valormin = valoractual}	
-					
+							int h = 0;
+							while( h < 15){
+								if(tercNivel->entradas[k].valor.val[h] < res->max_valor[h]){ h = 15; break;}
+								if(tercNivel->entradas[k].valor.val[h] > res->max_valor[h]){ break;}
+								h++;
+							}
+							if( h != 15 ){
+								//copiar a max_valor
+								for(int m = 0; m < 15; m++){ res->max_valor[m] = tercNivel->entradas[k].valor.val[m]; }
+							}
+
+							h = 0;	
+							while( h < 15 ){
+								if(tercNivel->entradas[k].valor.val[h] > res->min_valor[h]){ h = 15; break;}
+								if(tercNivel->entradas[k].valor.val[h] < res->min_valor[h]){ break;}
+								h++;
+							}
+							if(h != 15){
+								//copiar a min_valor
+								for(int m = 0; m < 15; m++){ res->min_valor[m] = tercNivel->entradas[k].valor.val[m]; }
+							}	
 						}
 					}
 				}
@@ -180,6 +194,7 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 		}
 
 	}
+	
 
 	return res;
 }

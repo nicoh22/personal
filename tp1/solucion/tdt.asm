@@ -96,7 +96,7 @@ tdt_agregarBloque:
 	lea rdx, [rsi + 3]
 	jmp tdt_agregar 
 
-; =====================================:
+; ====================================:
 ; void tdt_agregarBloques(tdt* tabla, bloque** b)
 
 tdt_agregarBloques:
@@ -107,7 +107,7 @@ tdt_agregarBloques:
 	mov rbx, rdi ; *tdt
 	mov r12, rsi ; **bloque
 .ciclo:
-	mov rcx, [r12]
+	mov rcx, [r12] ; *bloque
 	cmp rcx, 0
 	je .break
 	mov rdi, rbx
@@ -231,8 +231,7 @@ tdt_destruir:
 	push rbp
 	mov rbp, rsp
 	push rbx
-        
-	sub rsp, 8  
+	sub rsp, 8; alineada 
 	
 	mov rbx, [rdi]	
 	mov rdi, [rdi]
@@ -262,7 +261,8 @@ copyString:
 	push rbp
 	mov rbp, rsp
 	push rbx
-	
+	sub rsp, 8; alineada	
+
 	mov rbx, rdi; *string original	
 	xor rax, rax
 .ciclo:
@@ -280,6 +280,7 @@ copyString:
 	
 	call strcpy
 	
+	add rsp, 8
 	pop rbx
 	pop rbp
 	ret
@@ -294,11 +295,11 @@ borrarTodasLasClaves:
 	;TODO iterar solo por las claves que existen y no todas las posibles. 
 	push rbp
 	mov rbp, rsp
-	sub rsp, 16
+	sub rsp, 16; alineada
 	push rbx
 	push r12
 	push r13
-	push r14
+	push r14; alineada
 
 
 	mov rbx, rdi
