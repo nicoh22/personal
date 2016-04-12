@@ -310,6 +310,8 @@ borrarTodasLasClaves:
 
 .tercNivel:
 
+	je .segNivel
+
 	xor rax, rax
 	mov al, r12b
 	shl rax, 8 
