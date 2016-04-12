@@ -40,9 +40,13 @@ void tdt_agregar(tdt* tabla, uint8_t* clave, uint8_t* valor) {
 		valorInterno[i] = valor[i];
 		i++;
 	}
-	tercNivel->entradas[clave[0]].valido = 1;
-	tabla->cantidad++;
+	if(!tercNivel->entradas[clave[0]].valido){ //si el valor no es valido
+		tabla->cantidad++;
+		tercNivel->entradas[clave[0]].valido = 1;
+	}
 }
+
+
 
 void tdt_borrar(tdt* tabla, uint8_t* clave) {
 //se le puede pasar cualquier clave, se encuentre en la tabla o no
@@ -141,8 +145,9 @@ void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 	//el que me llama tiene la responsabilidad
 	//de liberar memoria
-	if(tdt_cantidad(tabla) == 0){ return NULL; } //O devolver un maxmin con NULLS?
 	maxmin* res = malloc(sizeof(maxmin));
+	for(int m = 0; m < 15; m++){ res->min_valor[m] = 0xFF; }
+	for(int m = 0; m < 15; m++){ res->max_valor[m] = 0x00; }
 	uint8_t encontreMinClave = 0;
 	tdtN1* primNivel = tabla->primera;
 	
