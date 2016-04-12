@@ -87,7 +87,7 @@ tdt_recrear:
 ; =====================================
 ; uint32_t tdt_cantidad(tdt* tabla)
 tdt_cantidad:
-	mov rax, [rdi + TDT_OFFSET_CANTIDAD]
+	mov eax, [rdi + TDT_OFFSET_CANTIDAD]
 	ret
 
 ; =====================================

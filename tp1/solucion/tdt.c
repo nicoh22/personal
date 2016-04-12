@@ -76,7 +76,7 @@ void tdt_borrar(tdt* tabla, uint8_t* clave) {
 		segNivel->entradas[clave[1]] = NULL;
 		int j = 0;
 		while( j < 256) {
-			tdtN3* unaTdtN3 = segNivel->entradas[clave[j]];
+			tdtN3* unaTdtN3 = segNivel->entradas[j];
 			if( unaTdtN3 != NULL ){ break; }
 			j++;
 		}
@@ -85,7 +85,7 @@ void tdt_borrar(tdt* tabla, uint8_t* clave) {
 			primNivel->entradas[clave[2]] = NULL; 
 			int k = 0;
 			while( k < 256) {
-				tdtN2* unaTdtN2 = primNivel->entradas[clave[k]];
+				tdtN2* unaTdtN2 = primNivel->entradas[k];
 				if( unaTdtN2 != NULL ){ break; }
 				k++;
 			}
@@ -148,9 +148,14 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 	maxmin* res = malloc(sizeof(maxmin));
 	for(int m = 0; m < 15; m++){ res->min_valor[m] = 0xFF; }
 	for(int m = 0; m < 15; m++){ res->max_valor[m] = 0x00; }
+
+	for(int m = 0; m < 3; m++){ res->max_clave[m] = 0x00; }
+	for(int m = 0; m < 3; m++){ res->min_clave[m] = 0x00; }
+
 	uint8_t encontreMinClave = 0;
 	tdtN1* primNivel = tabla->primera;
-	
+	if(tabla->primera == NULL){ return res; }	
+
 	for(int i = 0; i < 256; i++) {	
 		if(primNivel->entradas[i] != NULL){
 			tdtN2* segNivel = primNivel->entradas[i]; 
