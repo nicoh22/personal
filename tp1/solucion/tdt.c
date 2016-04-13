@@ -108,18 +108,20 @@ void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 	
 	if(primNivel == NULL){return;} //no hay ninguna tabla
 
-	for(int i = 0; i < 256; i++) {	
-		if(primNivel->entradas[i] != NULL){
-			clave[2] = i;	
-			tdtN2* segNivel = primNivel->entradas[i]; 
-			for(int j = 0; j < 256; j++) 
-			{
-				if(segNivel->entradas[j] != NULL){
-					clave[1] = j;	
-					tdtN3* tercNivel = segNivel->entradas[j]; 
-					for(int k = 0; k < 256; k++){
-						if(tercNivel->entradas[k].valido){
-							clave[0] = k;
+
+
+	//el orden lexicografico
+	for(int k = 0; k < 256; k++){
+		for(int j = 0; j < 256; j++){ 
+			for(int i = 0; i < 256; i++) {
+				clave[2] = i;	
+				clave[1] = j;	
+				clave[0] = k;	
+				if(primNivel->entradas[i] != NULL){
+					tdtN2* segNivel = primNivel->entradas[i];
+					if(segNivel->entradas[j] != NULL){
+						tdtN3* tercNivel = segNivel->entradas[j]; 
+						if(tercNivel->entradas[k].valido){	
 							fprintf(pFile,
 								"%02X%02X%02X => ",
 								clave[0],
@@ -134,13 +136,15 @@ void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 								);
 							}
 							fprintf(pFile, "\n");	
-						}	
+						}
 					}
 				}	
-			}	
+					
+			}
 		}
 	}
 }
+
 
 maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 	//el que me llama tiene la responsabilidad
@@ -156,16 +160,17 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 	tdtN1* primNivel = tabla->primera;
 	if(tabla->primera == NULL){ return res; }	
 
-	for(int i = 0; i < 256; i++) {	
-		if(primNivel->entradas[i] != NULL){
-			tdtN2* segNivel = primNivel->entradas[i]; 
-			for(int j = 0; j < 256; j++) {
-				if(segNivel->entradas[j] != NULL){
-					tdtN3* tercNivel = segNivel->entradas[j]; 
-					for(int k = 0; k < 256; k++) {
+
+	//el orden lexicografico
+	for(int k = 0; k < 256; k++){
+		for(int j = 0; j < 256; j++){ 
+			for(int i = 0; i < 256; i++) {
+				if(primNivel->entradas[i] != NULL){
+					tdtN2* segNivel = primNivel->entradas[i];
+					if(segNivel->entradas[j] != NULL){
+						tdtN3* tercNivel = segNivel->entradas[j]; 
 						if(tercNivel->entradas[k].valido){
 							// si llego aca estoy en algun valor valido
-							// clave = {k,j,i}
 							if(!encontreMinClave){
 								encontreMinClave = 1;
 								res->min_clave[2] = i;
@@ -203,12 +208,7 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 				}
 			}
 		}
-
 	}
-
-
-
-
 
 	return res;
 }
