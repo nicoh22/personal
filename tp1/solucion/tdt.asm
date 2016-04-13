@@ -39,6 +39,7 @@ tdt_crear:
 	mov rbx, rdi ; *identificacion
 
 	call copyString
+
 	mov r12, rax
 	
 	mov rdi, TDT_SIZE	
@@ -292,10 +293,9 @@ borrarTodasLasClaves:
 ;pero deja intacto el struct
 
 	;rdi *tdt
-	;TODO iterar solo por las claves que existen y no todas las posibles. 
 	push rbp
 	mov rbp, rsp
-	sub rsp, 16; alineada
+	sub rsp, 32; alineada
 	push rbx
 	push r12
 	push r13
@@ -307,17 +307,38 @@ borrarTodasLasClaves:
 	xor r12, r12
 	xor r13, r13
 	xor r14, r14
+	mov rdi, [rbx + TDT_OFFSET_PRIMERA]
+	cmp rdi, NULL
+	je .fin
+	mov [rbp - 8], rdi; puntero al primer elem en tdtN1
+		
+.primNivel:	
 
-.tercNivel:
+	mov rsi, [rdi + r12*8] ; segNivel
+	mov [rbp - 16], rsi
+	cmp rsi, NULL
+	je .itNiv1
 
-	je .segNivel
+.segNivel:
+	mov rcx, [rsi + r13*8]
+	mov [rbp - 24], rcx
+	CMP RCX, NULL
+	je .itNiv2
+	
+.tercNivel:	
+	mov dl, [rcx + r14 + VALOR_OFFSET_VALIDO]
+	cmp dl, NULL
+	je .itNiv3	
 
 	xor rax, rax
 	mov al, r12b
 	shl rax, 8 
 	mov al, r13b
 	shl rax, 8
-	mov al, r14b
+	
+	mov r8, r14
+	sar r8, 4
+	mov al, r8b
 
 	mov [rbp], rax
 
@@ -325,31 +346,46 @@ borrarTodasLasClaves:
 	mov rsi, rbp
 	call tdt_borrar
 
-	inc r14
-	cmp r14, 256
-	je .segNivel
-	jmp .tercNivel
+	mov rdi, [rbx + TDT_OFFSET_PRIMERA]; *tdtN1
+	cmp rdi, NULL
+	je .fin
+	
+	mov rdi, [rbp - 8]
+	cmp qword [rdi + r12*8], NULL; el puntero de la tdtN1 que apunta a la tdtN2 actual
+	je	.itNiv1
 
-.segNivel:
+	mov rsi, [rbp - 16]
+	cmp qword [rsi + r13*8], NULL; el puntero de la tdtN2 que apunta a la tdtN3 actual
+	je .itNiv2
+
+.itNiv3:
+	mov rcx, [rbp - 24]
+	add r14, 16
+	cmp r14, 256*16
+	jne .tercNivel
+
+.itNiv2:
+	
 	xor r14, r14
 	inc r13
 	cmp r13, 256
-	je .primNivel	
-	jmp .tercNivel
+	jne .segNivel
 
-.primNivel:
-	xor r13, r13
+.itNiv1:
+	xor r13, r13	
+	xor r14, r14
+
 	inc r12
 	cmp r12, 256
-	je .fin
-	jmp .tercNivel
+	jne .primNivel
+
 
 .fin:
 	pop r14
 	pop r13
 	pop r12
 	pop rbx
-	add rsp, 16
+	add rsp, 32
 	pop rbp
 	ret
 

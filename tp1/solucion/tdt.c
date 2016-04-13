@@ -55,10 +55,10 @@ void tdt_borrar(tdt* tabla, uint8_t* clave) {
 	if(primNivel == NULL){ return; } //no hay tabla, la clave no esta
 	
 	tdtN2* segNivel = primNivel->entradas[clave[2]]; 
-	if(segNivel == NULL){ return; } //no hay tabla, la clave no esta
+	if(segNivel == NULL){ return; }
 	
 	tdtN3* tercNivel = segNivel->entradas[clave[1]]; 
-	if(tercNivel == NULL){ return; } //no hay tabla, la clave no esta
+	if(tercNivel == NULL){ return; }
 	
 	if(!(tercNivel->entradas[clave[0]].valido)){ return; }
 
@@ -102,7 +102,7 @@ void tdt_borrar(tdt* tabla, uint8_t* clave) {
 
 void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 
-	fprintf(pFile, "- %s  -\n", tabla->identificacion);
+	fprintf(pFile, "- %s -\n", tabla->identificacion);
 	tdtN1* primNivel = tabla->primera;
 	int clave[3];
 	
@@ -122,9 +122,9 @@ void tdt_imprimirTraducciones(tdt* tabla, FILE *pFile) {
 							clave[0] = k;
 							fprintf(pFile,
 								"%02X%02X%02X => ",
-								clave[2],
+								clave[0],
 								clave[1],
-								clave[0]
+								clave[2]
 							       );	
 							for(int l = 0; l<15; l++){
 								fprintf(
@@ -150,7 +150,7 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 	for(int m = 0; m < 15; m++){ res->max_valor[m] = 0x00; }
 
 	for(int m = 0; m < 3; m++){ res->max_clave[m] = 0x00; }
-	for(int m = 0; m < 3; m++){ res->min_clave[m] = 0x00; }
+	for(int m = 0; m < 3; m++){ res->min_clave[m] = 0xFF; }
 
 	uint8_t encontreMinClave = 0;
 	tdtN1* primNivel = tabla->primera;
@@ -165,7 +165,7 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 					for(int k = 0; k < 256; k++) {
 						if(tercNivel->entradas[k].valido){
 							// si llego aca estoy en algun valor valido
-							// clave = {i,j,k}
+							// clave = {k,j,i}
 							if(!encontreMinClave){
 								encontreMinClave = 1;
 								res->min_clave[2] = i;
@@ -182,6 +182,7 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 								if(tercNivel->entradas[k].valor.val[h] > res->max_valor[h]){ break;}
 								h++;
 							}
+							
 							if( h != 15 ){
 								//copiar a max_valor
 								for(int m = 0; m < 15; m++){ res->max_valor[m] = tercNivel->entradas[k].valor.val[m]; }
@@ -204,7 +205,10 @@ maxmin* tdt_obtenerMaxMin(tdt* tabla) {
 		}
 
 	}
-	
+
+
+
+
 
 	return res;
 }

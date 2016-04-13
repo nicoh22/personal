@@ -3,10 +3,14 @@ CFLAGS=-Wall -Wextra -pedantic -O0 -ggdb -lm -Wno-unused-parameter
 NASM=nasm
 NASMFLAGS=-f elf64 -g -F DWARF
 
-all: main tester
+all: main test tester
 
 main: main.c tdt_c.o tdt_asm.o
 	$(CC) $(CFLAGS) $^ -o $@
+
+test: test.c tdt_c.o tdt_asm.o
+	$(CC) $(CFLAGS) $^ -o $@
+
 
 tester: tester.c tdt_c.o tdt_asm.o
 	$(CC) $(CFLAGS) $^ -o $@
