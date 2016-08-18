@@ -1,3 +1,0 @@
-Xd
-
-* El hilo rojo
