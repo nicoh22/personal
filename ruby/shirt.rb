@@ -4,7 +4,11 @@ require 'shellwords'
 BUILTINS = {
 	'cd' => lambda { |dir = '/home/nicolas'| Dir.chdir(dir) }, #hack
 	'exit' => lambda { |code = 0| exit(code.to_i) },
-	'exec' => lambda { |*command| exec *command }
+	'exec' => lambda { |*command| exec *command },
+	'set' => lambda {|args| 
+		key, value = args.split('=')
+		ENV[key] = value
+	}
 }
 
 
@@ -21,7 +25,6 @@ loop do
 		}
 		Process.wait pid
 	end
-
 
 end
 
