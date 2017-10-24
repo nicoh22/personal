@@ -1,4 +1,4 @@
-#import random
+import random
 #import sys
 import time
 import scapy.all as sp
@@ -9,25 +9,44 @@ import requests as req
 
 class TraceRoute():#MethodObject jajaja
     def _init_(self, dst):
+        #config
+        self.tamRafaga = 3
+        self.cantReintentos = 3
+        self.timeout = 1000#ms
+        self.maxTtl = 20
+        
         self.destino = sp.Net(dst)
-        self.echoRequests = sp.IP(dst=self.destino, ttl=(1,maxTtl)) / sp.ICMP()#ok, un paquete por ttl
+        self.echoRequests = sp.IP(dst=self.destino, ttl=(1,self.maxTtl)) / sp.ICMP()
 
-    def xxx():
-        for paquete in self.echoRequests
-            paquete[sp.ICMP].id = random.randint(0, 65535)
+
+
+    def trace():
+        for request in self.echoRequests
+            request[sp.ICMP].id = random.randint(0, 65535)
             respuestas = []
-            for medicion in range(medicionesPorTtl):#cambiar nombres?
-                for reintento in range(self.tamRafaga):
+            for medicion in range(tamRafaga):
+                for reintento in range(self.cantReintentos):
                     tiempoInicio = time.perf_counter()
-                    respuesta = sp.sr(paquete)
+                    respuesta = sp.sr(request)
                     tiempoFin = time.perf_counter()
                     rtt = tiempoFin - tiempoInicio
                     if respuesta is not None:
-                        respuestas.append(respuesta)
-                        #esto creo que no va, 
-                        #Nosotros queremos reintentar varias veces para cada
-                        #ttl, con el fin de encontrar varias ruta o tomar rtt promediado.
+                        ip_respuesta = respuesta.src
+                        respuestas.append((ip_respuesta, rtt))
+                        llegamos_a_destino = destino == ip_respuesta
                         break
+
+            #hop, rttToHop = self.analizarRespuestas(respuestas)
+            echoResponse = self.analizarRespuestas(respuestas)
+            #TODO procesar datos obtenidos
+            if self.destino == respuesta:
+                break
+
+
+    def analizarRespuestas(self, respuestas):
+        #something
+
+
 
 
 #def main(destino, maximo_ttl, timeout_por_ttl, mediciones_por_ttl, reintentos_por_ttl):
