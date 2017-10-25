@@ -6,6 +6,7 @@ import numpy as np
 import requests as req
 #from scipy import stats
 #from os import getuid, stat
+from collections import Counter
 
 class TraceRoute():#MethodObject jajaja
     def _init_(self, dst):
@@ -17,6 +18,7 @@ class TraceRoute():#MethodObject jajaja
         
         self.destino = sp.Net(dst)
         self.echoRequests = sp.IP(dst=self.destino, ttl=(1,self.maxTtl)) / sp.ICMP()
+        self.route = []
 
 
 
@@ -36,15 +38,41 @@ class TraceRoute():#MethodObject jajaja
                         llegamos_a_destino = destino == ip_respuesta
                         break
 
-            #hop, rttToHop = self.analizarRespuestas(respuestas)
-            echoResponse = self.analizarRespuestas(respuestas)
-            #TODO procesar datos obtenidos
+            hop, rttToHop = self.analizarRespuestas(respuestas)
+            if hop is not None:
+                mediciones.append((request.ttl, hop, rttToHop))
+
+            self.route.append((hop,rttToHop))#ponele que necesito esto
             if self.destino == respuesta:
                 break
+        detectarOutliers(mediciones)
 
 
     def analizarRespuestas(self, respuestas):
-        #something
+        #TODO hay una forma mas copada de decir respuesta[0]
+        #ips = [res[0] for res in respuestas]
+        #ipCount = Counter(ips)
+
+        ipDict = {}
+        for respuesta in respuestas:
+            if respuesta[0] in ipDict:
+                rttAcumulado, cantidadAcumulada = ipDict[respuesta[0]]
+                ipDict[respuesta[0]] = (rttAcumulado + respuesta[1], cantidadAcumulada + 1)
+            else:
+                ipDict[respuesta[0]] = (respuesta[1], 1)
+        
+        cantidadMaxima = 0
+        ipElegida = None
+        rttPromedio = 0
+        for ip in ipDict.keys():
+            rttAcum, cant = ipDict[ip]
+            if cant > cantidadMaxima:
+                cantidadMaxima = cant
+                ipElegida = ip
+                rttPromedio = rttAcum / cant
+
+        return ipElegida, rttPromedio
+
 
 
 
