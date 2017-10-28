@@ -7,71 +7,107 @@ import requests as req
 #from scipy import stats
 #from os import getuid, stat
 from collections import Counter
+import json
 
 class TraceRoute():#MethodObject jajaja
-    def _init_(self, dst):
-        #config
-        self.tamRafaga = 3
-        self.cantReintentos = 3
-        self.timeout = 1000#ms
-        self.maxTtl = 20
-        
-        self.destino = sp.Net(dst)
-        self.echoRequests = sp.IP(dst=self.destino, ttl=(1,self.maxTtl)) / sp.ICMP()
-        self.route = []
+	def _init_(self, dst):
+		#config
+		self.tamRafaga = 3
+		self.cantReintentos = 3
+		self.timeout = 1000#ms
+		self.maxTtl = 20
+
+		self.destino = sp.Net(dst)
+		self.echoRequests = sp.IP(dst=self.destino, ttl=(1,self.maxTtl)) / sp.ICMP()
+		self.traced = []
+		self.trace()
+
+	def trace():
+		hopCount = 1
+		for request in self.echoRequests:
+			request[sp.ICMP].id = random.randint(0, 65535)
+			respuestas = []
+			for medicion in range(tamRafaga):
+				for reintento in range(self.cantReintentos):
+					tiempoInicio = time.perf_counter()
+					respuesta = sp.sr(request)
+					tiempoFin = time.perf_counter()
+					rtt = tiempoFin - tiempoInicio#TODO chequear que sean milisegundos
+					if respuesta is not None:
+						respuestas.append((respuesta.src, rtt))
+						llegamos_a_destino = destino == ip_respuesta
+						break
+
+			hop, rttToHop = self.analizarRespuestas(respuestas)
+			#TODO geolocalizar aqui
+			traced.append({"rtt":rttToHop, "ip_address":hop, "salto_internacional":False, "hop_num":hopCount})
+			
+			hopCount = hopCount + 1 
+            #if hop is not None:
+            #    mediciones.append((request.ttl, hop, rttToHop))
+
+			if self.destino == respuesta:
+				break
+
+		#Todo lo siguiente puede ir en un metodo aparte no?
+        #self.detectarOutliers(mediciones)
 
 
+	def analizarRespuestas(self, respuestas):
+		#TODO hay una forma mas copada de decir respuesta[0]
+		#ips = [res[0] for res in respuestas]
+		#ipCount = Counter(ips)
 
-    def trace():
-        for request in self.echoRequests
-            request[sp.ICMP].id = random.randint(0, 65535)
-            respuestas = []
-            for medicion in range(tamRafaga):
-                for reintento in range(self.cantReintentos):
-                    tiempoInicio = time.perf_counter()
-                    respuesta = sp.sr(request)
-                    tiempoFin = time.perf_counter()
-                    rtt = tiempoFin - tiempoInicio
-                    if respuesta is not None:
-                        ip_respuesta = respuesta.src
-                        respuestas.append((ip_respuesta, rtt))
-                        llegamos_a_destino = destino == ip_respuesta
-                        break
+		ipDict = {}
+		for respuesta in respuestas:
+			if respuesta[0] in ipDict:
+				rttAcumulado, cantidadAcumulada = ipDict[respuesta[0]]
+				ipDict[respuesta[0]] = (rttAcumulado + respuesta[1], cantidadAcumulada + 1)
+			else:
+				ipDict[respuesta[0]] = (respuesta[1], 1)
 
-            hop, rttToHop = self.analizarRespuestas(respuestas)
-            if hop is not None:
-                mediciones.append((request.ttl, hop, rttToHop))
+		cantidadMaxima = 0
+		ipElegida = None
+		rttPromedio = 0
+		for ip in ipDict.keys():
+			rttAcum, cant = ipDict[ip]
+			if cant > cantidadMaxima:
+				cantidadMaxima = cant
+				ipElegida = ip
+				rttPromedio = rttAcum / cant
 
-            self.route.append((hop,rttToHop))#ponele que necesito esto
-            if self.destino == respuesta:
-                break
-        detectarOutliers(mediciones)
+		return ipElegida, rttPromedio
 
+	def detectarOutliers(self, mediciones):
+		
+		rttDifs = []
+		rttAnterior = 0
 
-    def analizarRespuestas(self, respuestas):
-        #TODO hay una forma mas copada de decir respuesta[0]
-        #ips = [res[0] for res in respuestas]
-        #ipCount = Counter(ips)
+		for medicion in mediciones:
+			rttDifs.append(float(medicion[2]) - rttAnterior)
 
-        ipDict = {}
-        for respuesta in respuestas:
-            if respuesta[0] in ipDict:
-                rttAcumulado, cantidadAcumulada = ipDict[respuesta[0]]
-                ipDict[respuesta[0]] = (rttAcumulado + respuesta[1], cantidadAcumulada + 1)
-            else:
-                ipDict[respuesta[0]] = (respuesta[1], 1)
-        
-        cantidadMaxima = 0
-        ipElegida = None
-        rttPromedio = 0
-        for ip in ipDict.keys():
-            rttAcum, cant = ipDict[ip]
-            if cant > cantidadMaxima:
-                cantidadMaxima = cant
-                ipElegida = ip
-                rttPromedio = rttAcum / cant
+		outliersStandard = cimbalaStandard(rttDifs)
+		outliersRemoviendo = cimbalaRemoviendo(rttDifs)
 
-        return ipElegida, rttPromedio
+		return outliersStandard#, outliers_removiendo
+		
+	def cimbalaStandard(rttDifs):
+		outliers = []
+		if len(rttDifs) > 0:
+			media = np.mean(rttDifs)
+			desvio_standard = np.std(rttDifs)
+			tg = thompson_gamma(rttDifs)
+			#falta completar los calculos
+
+			for rttDif in rttDifs:
+				delta = np.absolute(rttDif - media)
+				if (delta > tg * desvio_standard):
+					outliers.append(rttDif)
+					#print("outlier: " + str(int(rttDif * 1000)))
+
+		return outliers
+		
+
 
 
 
@@ -82,6 +118,5 @@ class TraceRoute():#MethodObject jajaja
 
 if __name__ == "__main__":
 
-    route = TraceRoute("www.google.com")
-    output = JsonBuilder(route)
-    print(output)
+	route = TraceRoute("www.google.com")
+	json.dumps(route.traced)
