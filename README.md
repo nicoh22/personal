@@ -1,3 +1,3 @@
-#My_repo
+# Personal repo
 
 Dotfiles and little projects.
