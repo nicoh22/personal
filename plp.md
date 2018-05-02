@@ -85,11 +85,11 @@ Matriz(M)[V1][V2] -> M (Notar que es byname, no reducimos antes de devolver M)
 
 (V1 = V3) and (V2 = v4)
 -----E-assign1
-(M[V1][V2] <- P)[V3][V4] -> P
+(V5[V1][V2] <- P)[V3][V4] -> P
 
 not(V1 = V3) or not(V2 = v4)
 -----E-assign2 (La que nos permite buscar recursivamente en la matriz)
-(M[V1][V2] <- P)[V3][V4] -> M[V3][V4]
+(V5[V1][V2] <- P)[V3][V4] -> V5[V3][V4]
 
 ###inciso D
 
