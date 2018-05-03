@@ -102,25 +102,4 @@ Matriz(\y:Bool.y)[0][Succ(0)]
 
 ## Primer cuatri 2015 - Ejercicio 1
 
-### Inciso a 
-
-Funcion entrelazar
-
-	entrelazar::[a]->[a]->[a]
-	entrelazar xs ys = concat(zipWith (\x y -> x:y:[]) xs ys)
-	entrelazar' xs ys = concatMap (\p -> (fst p):(snd p): []) zip xs ys
-
-Probado empiricamente que funciona con infinitas, pero ni idea porque.
-
-### Inciso b
-
-	duplicarApariciones::[a]->[a]
-	duplicarApariciones as = entrelazar as as
-	
-### Inciso c
-	
-	factorial = dynprog f 1 
-		where f = (\res -> (head res) * (length res))
-		--length res capaz necesita un +1
-	
-### Inciso d
+(En archivo dynprog.hs)
