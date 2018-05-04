@@ -1,4 +1,4 @@
--- Inciso a 
+-- Inciso a
 
 entrelazar::[a]->[a]->[a]
 entrelazar xs ys = concat(zipWith (\x y -> x:y:[]) xs ys)
@@ -16,10 +16,16 @@ dynprog _ x 0 = [x]
 dynprog f x n | n > 0 = (f rec):rec
                           where rec = dynprog f x (n-1)
 
-factorial = dynprog f 1 
+factorial = dynprog f 1
               where f = (\res -> (head res) * (1 + length res ))
 
 -- Inciso d
 fibonacci :: Int -> [Int]
 fibonacci = dynprog f 1
-                where f = (\res -> if (length res) == 1 then 1 else head(res) + head(tail(res)))
+              where f = (\res -> if (length res) == 1 then 1 else head(res) + head(tail(res)))
+
+-- Inciso e
+
+--listasQueSuman::Int->[[Int]]-- res es de tipo [[[Int]]]
+listasQueSuman n = head (dynprog f [[]] n)
+                     where f = \res -> map (\ls -> ((length res) - (sum ls)):ls) (concat res) 
