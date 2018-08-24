@@ -1,5 +1,7 @@
 import argparse
 import browser
+import db
+import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='NoteTaker takes notes and stores bookmarks.')
@@ -10,6 +12,11 @@ if __name__ == "__main__":
         note -- adds new note
         edit -- edits or deletes current notes/bookmarks""")            
     args = parser.parse_args()
-
+    if mode == 'start':
+        import noteServer #quiza lo defina en este modulo nomas
+        noteServer.Server().start()
+    if mode == 'bookmark':
+    if mode == 'note':
+    if mode == 'edit':
 
     
