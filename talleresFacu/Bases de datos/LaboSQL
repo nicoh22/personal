@@ -1,0 +1,55 @@
+
+sqlite> SELECT a.name FROM Track t
+   ...> JOIN Album ab ON ab.AlbumId = t.AlbumId
+   ...> JOIN Artist a ON ab.ArtistId = a.ArtistId
+   ...> GROUP BY a.name
+   ...> HAVING COUNT(*) > 5;
+
+sqlite> select e.FirstName, e.LastName FROM Customer c 
+   ...> JOIN Employee e ON c.SupportRepId = e.EmployeeId
+   ...> GROUP BY e.employeeId
+   ...> HAVING COUNT(*) > 5;
+
+
+sqlite> Select c.FirstName, Count(e.EmployeeId) From Customer c 
+   ...> LEFT OUTER JOIN Employee e ON e.city = c.city
+   ...> GROUP BY c.CustomerId;
+
+
+sqlite> Select t.Name  FROM Track t
+   ...> WHERE t.Milliseconds >     
+   ...> (SELECT AVG(Milliseconds) FROM Track);
+
+
+SELECT c.CustomerId, e.EmployeeId FROM Customer c LEFT OUTER JOIN Employee e ON c.city = e.city;
+select e.city from Employee e;
+
+CREATE VIEW generolistas(genero, cantidad) AS
+SELECT g.name, COUNT(pt.PlaylistId) FROM Genre g
+
+SELECT * FROM Genre g
+JOIN Track t ON g.GenreId = t.GenreId
+JOIN PlaylistTrack pt ON t.TrackId = pt.TrackId
+GROUP BY g.GenreId;
+
+SELECT r.name, COUNT(*) FROM
+(SELECT * FROM Genre g
+JOIN Track t ON g.GenreId = t.GenreId
+JOIN PlaylistTrack pt ON t.TrackId = pt.TrackId
+GROUP BY pt.PlaylistId) AS r
+GROUP BY r.GenreId;
+
+SELECT DISTINCT pt.PlaylistId FROM Genre g
+JOIN Track t ON g.GenreId = t.GenreId
+JOIN PlaylistTrack pt ON t.TrackId = pt.TrackId
+WHERE g.Name = 'Rock'
+GROUP BY pt.PlaylistId
+
+
+FROM Playlist p
+
+JOIN PlaylistTrack pt ON p.PlaylistId = pt.PlaylistId
+JOIN Track t ON pt.TrackId = t.TrackId
+JOIN Genre g ON t.GenreId = g.GenreId
+GROUP BY g.GenreId, t.trackId;
+
