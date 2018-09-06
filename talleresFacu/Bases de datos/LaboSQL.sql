@@ -56,20 +56,56 @@ GROUP BY g.GenreId, t.trackId;
 
 --- Rodrigo
 
-SELECT query1.name, query1.genre_id, count(query1.playlist_id) FROM
-	(SELECT ge.name, ge.genre_id, pt.playlist_id
+SELECT query1.name, query1.genreId, count(query1.playlistId) FROM
+	(SELECT ge.name, ge.genreId, pt.playlistId
 	FROM genre as ge
-	JOIN track as tr ON tr.genre_id = ge.genre_id
-	JOIN playlist_track as pt ON pt.track_id = tr.track_id 
-	group by ge.genre_id, pt.playlist_id 
+	JOIN track as tr ON tr.genreId = ge.genreId
+	JOIN PlaylistTrack as pt ON pt.trackId = tr.trackId 
+	group by ge.genreId, pt.playlistId 
 	order by ge.name desc) as query1 
-group by query1.genre_id, query1.name 
-order by count(query1.playlist_id);
+group by query1.genreId, query1.name 
+order by count(query1.playlistId);
 
 select distinct pt.playlist_id, ge.genre_id, ge.name
 from track as tr
 join playlist_track as pt on pt.track_id = tr.track_id
 join genre as ge on ge.genre_id = tr.genre_id order by ge.name desc;
+--- Entonces con la view queda
 
 
+CREATE VIEW generolistas(genero, cantidad) AS
+	SELECT query1.name, count(query1.playlistId) FROM
+		(SELECT ge.name, ge.genreId, pt.playlistId
+		FROM genre as ge
+		JOIN track as tr ON tr.genreId = ge.genreId
+		JOIN PlaylistTrack as pt ON pt.trackId = tr.trackId 
+		group by ge.genreId, pt.playlistId 
+		order by ge.name desc) as query1 
+	group by query1.name 
+	order by count(query1.playlistId);
+
+
+
+--- Ejercicio 8
+
+Select g.Name From Track t 
+JOIN Genre g ON g.GenreId = t.GenreId
+JOIN PlaylistTrack pt ON t.TrackId = pt.TrackId
+Group by t.TrackId
+HAVING count(pt.playlistId) > (SELECT COUNT(*) From Playlist) / 2
+
+
+Select g.GenreId FROM Track t
+JOIN Genre g ON g.GenreId = t.GenreId
+JOIN PlaylistTrack pt ON t.TrackId = pt.TrackId
+Group by g.genreId
+HAVING count(pt.playlistId) > ALL(Select count(pt2.PlaylistId) FROM Track t2
+	JOIN PlaylistTrack pt2 ON t2.TrackId = pt2.TrackId
+	Group by t2.TrackId);
+
+
+
+(Select count(playlistId) From track t2 
+	JOIN PlaylistTrack pt2 ON t2.TrackId = pt2.TrackId
+	WHERE t2.trackId = T.trackId )
 
