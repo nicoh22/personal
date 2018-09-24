@@ -13,5 +13,7 @@ class Browser:
     def executeCommand(self, command):
         with open(self.commandQueue) as fifo:
             fifo.write(command)
-
-
+    
+    def showLocalPage(self, path):
+        #TODO transform path into absolute path
+        self.executeCommand("open -t file://" + path)
